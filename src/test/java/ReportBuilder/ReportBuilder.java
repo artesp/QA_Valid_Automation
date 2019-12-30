@@ -75,7 +75,7 @@ public class ReportBuilder {
     }
 
     public String configureNameFile(){
-        String name = "TestAutomationReport";
+        String name = "AutomationReport_";
         Date _date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
         String date = formatter.format(_date);
