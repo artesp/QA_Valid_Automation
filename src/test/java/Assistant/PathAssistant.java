@@ -32,6 +32,7 @@ public class PathAssistant {
     //XPath for main menu List Management
     public static final String PATH_MENU_LISTMANAGEMENT_PTBR = "//p[text()[contains(.,'Gerenciamento de Lista')]]";
     public static final String PATH_MENU_LISTMANAGEMENT_ENGlISH = "//p[text()[contains(.,'List Management')]]";
+    public static final String PATH_MENU_DELIVERYCENTER_CRIACAO_CONTEUDO = "//*[@id='menu-item-0']/li[6]/a/div[1]/span";
 
     //Buttons
     public static final String PATH_BUTTON_LOAD_NEW_LIST_PTBR = "//button[text()[contains(.,'Carregar Nova Lista')]]";

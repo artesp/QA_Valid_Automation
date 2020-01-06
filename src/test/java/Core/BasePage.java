@@ -1,6 +1,8 @@
 package Core;
 
+import Assistant.ConstantsAssistant;
 import Assistant.IdAssistant;
+import DataPortal_Pages.DataPortal_Login_Page;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
@@ -13,13 +15,11 @@ import static Core.DriverFactory.getDriver;
 
 public class BasePage {
 
-
-//    private String pathFile = "/home/rafael/Project/QA_Valid_Automation/src/test/java/CSV/Pasta1.csv";
-
     private URL url = Thread.currentThread().getContextClassLoader().getResource("CSV/Pasta1.csv");
     private String pathFile = url.getPath();
-
     private JavascriptExecutor js = getDriver();
+
+    private DataPortal_Login_Page dataPortalLoginPage = new DataPortal_Login_Page();
 
     protected void clickButton(By by){
         getDriver().findElement(by).click();
@@ -125,6 +125,14 @@ public class BasePage {
         }catch (InterruptedException e){
             e.printStackTrace();
         }
+    }
+
+    protected void enterInDataPortal(String user, String password){
+        waitForLoad(8000);
+        dataPortalLoginPage.enterUser_DataPortal(user);
+        dataPortalLoginPage.enterPassword_DataPortal(password);
+        dataPortalLoginPage.clickInButtonEnter_DataPortal();
+        waitForLoad(11000);
     }
 
 
