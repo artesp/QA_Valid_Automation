@@ -24,14 +24,17 @@ public class ReportBuilder {
     private ReportJSONEntity entity = new ReportJSONEntity();
     private PdfPTable table = new PdfPTable(3); //4
     private Document document = new Document();
+    private String prefixName;
 
     public void pdfBuilderBatch() throws FileNotFoundException, DocumentException {
-        setupPDFConfiguration();
+
         ArrayList<ReportJSONEntity> listReportJSONEntity = listGsonFromJson();
 
         for (int i =0;i<listReportJSONEntity.size();i++){
             fillPDFReport(listReportJSONEntity.get(i));
+            prefixName = listReportJSONEntity.get(i).labels.get(0).value;
         }
+        setupPDFConfiguration();
         document.add(table);
         document.close();
 
@@ -75,13 +78,15 @@ public class ReportBuilder {
     }
 
     public String configureNameFile(){
-        String name = "AutomationReport_";
+//        String name = "AutomationReport_";
+        String prefix = prefixName;
+        String[] name = prefix.split("\\.");
         Date _date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
         String date = formatter.format(_date);
         String source = UrlSystemAssistant.PATH_DIR_REPORTS;
         String extension = ".pdf";
-        String concatName = source+name+date+extension;
+        String concatName = source+name[1]+date+extension;
         return concatName;
 
     }
@@ -93,7 +98,7 @@ public class ReportBuilder {
     }
 
     public ArrayList<ReportJSONEntity> listGsonFromJson(){
-        File dir = new File(UrlSystemAssistant.PATH_DIR_JSON_TESTS);
+        //File dir = new File(UrlSystemAssistant.PATH_DIR_JSON_TESTS);
         ArrayList<ReportJSONEntity>listEntity = new ArrayList<>();
         for (String fileEntry:listJsonReader()) {
             jsonObject = jsonReader(fileEntry);
