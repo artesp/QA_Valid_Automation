@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,12 @@ import static Core.DriverFactory.getDriver;
 
 public class BasePage {
 
-    private String pathFile = "/home/rafael/Project/CSV/Pasta1.csv";
+
+//    private String pathFile = "/home/rafael/Project/QA_Valid_Automation/src/test/java/CSV/Pasta1.csv";
+
+    private URL url = Thread.currentThread().getContextClassLoader().getResource("CSV/Pasta1.csv");
+    private String pathFile = url.getPath();
+
     private JavascriptExecutor js = getDriver();
 
     protected void clickButton(By by){
