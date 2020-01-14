@@ -3,10 +3,14 @@ package Core;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.File;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
 public class DriverFactory {
 
+    private static String strChromeDriverPath = "Drivers/chromedriver";
+    private static File driverPath = new File(strChromeDriverPath);
     private static ChromeDriver driver;
 
     public static ChromeDriver getDriver(){
@@ -17,7 +21,8 @@ public class DriverFactory {
     }
 
     private static void createDriver() {
-        System.setProperty("webdriver.chrome.driver","/home/rafael/Drivers/chromedriver");
+        System.setProperty("webdriver.chrome.driver", driverPath.getAbsolutePath());
+        System.out.println(driverPath.getAbsolutePath());
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("test-type");

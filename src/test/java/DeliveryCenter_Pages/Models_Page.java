@@ -11,8 +11,13 @@ public class Models_Page extends BasePage {
     public DataPortal_Login_Page dataPortalLoginPage = new DataPortal_Login_Page();
 
     public void enterInDataPortal(){
-        enterInDataPortal(ConstantsAssistant.DELIVERYCENTER_USER_ADM_DEUTSCHE, ConstantsAssistant.DELIVERYCENTER_USER_PSWD_DEUTSCHE);
+        waitForLoad(8000);
+        dataPortalLoginPage.enterUser_DataPortal(ConstantsAssistant.DELIVERYCENTER_USER_ADM_DEUTSCHE);
+        dataPortalLoginPage.enterPassword_DataPortal(ConstantsAssistant.DELIVERYCENTER_USER_PSWD_DEUTSCHE);
+        dataPortalLoginPage.clickInButtonEnter_DataPortal();
     }
+
+
 
 
 

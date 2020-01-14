@@ -13,8 +13,11 @@ public class Dashboard_Page extends BasePage {
     DataPortal_Login_Page pageLoginDataPortal = new DataPortal_Login_Page();
 
     public void enterInThePortal(){
-        enterInDataPortal(ConstantsAssistant.DELIVERYCENTER_USER_ADM_DEUTSCHE, ConstantsAssistant.DELIVERYCENTER_USER_PSWD_DEUTSCHE);
-    }
+        waitForLoad(8000);
+        pageLoginDataPortal.enterUser_DataPortal(ConstantsAssistant.DELIVERYCENTER_USER_ADM_DEUTSCHE);
+        pageLoginDataPortal.enterPassword_DataPortal(ConstantsAssistant.DELIVERYCENTER_USER_PSWD_DEUTSCHE);
+        pageLoginDataPortal.clickInButtonEnter_DataPortal();
+   }
 
     public String dashboardChartsExistsByText_Dashboard(String text){
         String textElement = getTextOfElement(By.xpath("//h6[.='"+text+"']"));

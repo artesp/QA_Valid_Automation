@@ -24,7 +24,7 @@ public class DeliveryCenter_Models_Test extends BaseTest {
     @Description("Check the creating email template")
     @DisplayName("DC-54: Create email template")
     public void createEmailTemplate(){
-        enterInDataPortal();
+        page.enterInDataPortal();
         menuPage.clickInMainMenuTogglebutton();
         menuPage.selectCriacaoConteudo();
 
@@ -37,10 +37,6 @@ public class DeliveryCenter_Models_Test extends BaseTest {
 
     }
 
-
-    private void enterInDataPortal(){
-        page.enterInDataPortal();
-    }
 
     private void setUrl() {
         AddressEntity.setUrl(UrlSystemAssistant.URL_DEV_DATAPORTAL);
