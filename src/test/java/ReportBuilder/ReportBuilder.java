@@ -25,6 +25,8 @@ public class ReportBuilder {
     private PdfPTable table = new PdfPTable(3); //4
     private Document document = new Document();
     private String prefixName;
+    private static String strPathReport = "";
+    private static File mainPath = new File(strPathReport);
 
     public void pdfBuilderBatch() throws FileNotFoundException, DocumentException {
 
@@ -63,7 +65,7 @@ public class ReportBuilder {
     }
 
     public static void clearDirectory(){
-        File dir = new File(UrlSystemAssistant.PATH_DIR_JSON_TESTS);
+        File dir = new File(mainPath.getAbsoluteFile()+"/target/allure-results/");
         for (File file:dir.listFiles()) {
             if(!file.isDirectory()){
                 file.delete();
@@ -78,13 +80,12 @@ public class ReportBuilder {
     }
 
     public String configureNameFile(){
-//        String name = "AutomationReport_";
         String prefix = prefixName;
         String[] name = prefix.split("\\.");
         Date _date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy_HHmmss");
         String date = formatter.format(_date);
-        String source = UrlSystemAssistant.PATH_DIR_REPORTS;
+        String source = mainPath.getAbsolutePath()+"/Reports/";
         String extension = ".pdf";
         String concatName = source+name[1]+date+extension;
         return concatName;

@@ -9,6 +9,6 @@ public class UrlSystemAssistant {
     public static final String URL_PROD_DATAPORTAL = "https://customer.validsolutions.net/#/login";
 
     public static final String PATH_DIR_JSON_TESTS = "/home/rafael/Project/QA_Valid_Automation/target/allure-results/";
-    public static final String PATH_DIR_REPORTS = "/home/rafael/Project/Reports/";
+//    public static final String PATH_DIR_REPORTS = "/home/rafael/Project/Reports/";
 
 }
