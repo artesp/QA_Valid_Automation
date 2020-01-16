@@ -11,10 +11,10 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 
-public class ApiTests extends BaseTestAPI {
+public class ApiTests_CampaignState extends BaseTestAPI {
 
 
-    public ApiTests() {
+    public ApiTests_CampaignState() {
         setBasePath();
     }
 
@@ -34,14 +34,6 @@ public class ApiTests extends BaseTestAPI {
                 .statusCode(200)
                 .body("content", hasSize(greaterThan(0)))
                 .body("numberOfElements", greaterThan(0))
-        ;
-    }
-
-    @Test
-    public void testAPI2(){
-        given()
-                .when()
-                .then()
         ;
     }
 
