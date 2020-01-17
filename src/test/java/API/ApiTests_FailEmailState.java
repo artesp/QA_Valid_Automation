@@ -7,6 +7,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
 
 public class ApiTests_FailEmailState extends BaseTestAPI {
 
@@ -22,6 +24,8 @@ public class ApiTests_FailEmailState extends BaseTestAPI {
                 .when()
                 .get()
                 .then()
+                .statusCode(200)
+                .body("content", hasSize(greaterThan(0)))
         ;
     }
 
