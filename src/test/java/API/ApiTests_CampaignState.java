@@ -79,22 +79,35 @@ public class ApiTests_CampaignState extends BaseTestAPI {
     }
 
     @Test
-    @Description("Verificar retorno com data inicial nula e data final informada")
-    @DisplayName("Filtrando por Data Inicial em branco")
+    @Description("Verificar retorno com apenas uma data informada")
+    @DisplayName("Informando apenas 1 filtro de data")
     public void naoInformarDataInicial(){
         given()
                 .param("campaign.brandId","17")
-                .param("campaign.startDate", "")
-                .param("campaign.startDate","2020-01-01 00:00:00.00")
+//                .param("campaign.startDate", "")
+                .param("campaign.startDate","2020-01-03 00:00:00.00")
                 .when()
                 .get()
                 .then()
-                .log().all()
+//                .log().all()
                 .statusCode(200)
-                .body("content", hasSize(0))
+                .body("content", hasSize(greaterThan(0)))
+                .body("sentDate.findAll{it.starsWith('2020-01-04')}", hasSize(0))
+                .body("sentDate.findAll{it.starsWith('2020-01-02')}", hasSize(0))
         ;
     }
 
+
+
+
+
+    /*  @Test
+        @Description("")
+        @DisplayName("")
+        public void test(){
+
+        }
+    */
 
 
 
