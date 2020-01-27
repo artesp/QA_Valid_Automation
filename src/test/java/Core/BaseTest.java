@@ -34,7 +34,7 @@ public class BaseTest {
 
     @AfterAll
     public static void tearDownClass() throws FileNotFoundException, DocumentException {
-        new ReportBuilder().pdfBuilderBatch();
+//        new ReportBuilder().pdfBuilderBatch();
     }
 
     private void openBrowser(String url) {

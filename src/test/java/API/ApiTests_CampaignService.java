@@ -21,10 +21,10 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ApiTests_CampaignState extends BaseTestAPI {
+public class ApiTests_CampaignService extends BaseTestAPI {
 
 
-    public ApiTests_CampaignState() {
+    public ApiTests_CampaignService() {
         setBasePath();
     }
 
@@ -57,7 +57,7 @@ public class ApiTests_CampaignState extends BaseTestAPI {
                 .when()
                 .get()
                 .then()
-//              .log().all()
+                .log().all()
                 .statusCode(200)
                 .body("content.findAll{it.productId != 109}", hasSize(0))
         ;
