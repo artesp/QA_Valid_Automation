@@ -1,6 +1,7 @@
 package Core;
 
 import Assistant.AddressEntity;
+import Assistant.SharedMethods;
 import ReportBuilder.ReportBuilder;
 import com.itextpdf.text.DocumentException;
 import io.restassured.RestAssured;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static ReportBuilder.ReportBuilder.clearDirectory;
 
@@ -22,6 +25,8 @@ public class BaseTestAPI {
     public static ResponseSpecification resSpec;
     public static RequestSpecBuilder reqBuilder;
 //    public static ResponseSpecBuilder resBuilder;
+
+    public static String variableName;
 
 
     @BeforeAll
@@ -46,4 +51,21 @@ public class BaseTestAPI {
 //        new ReportBuilder().pdfBuilderBatch();
     }
 
+    public String createNameForTest(){
+        variableName = "testAPI"+dateHours();
+        return variableName;
+    }
+
+    public Map<String, Object> params (String name, Integer companyId, Integer brandId, String variableList){
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", name);
+        parameters.put("companyId", companyId);
+        parameters.put("brandId", brandId);
+        parameters.put("variables", variableList);
+        return parameters;
+    }
+
+    private String dateHours(){
+        return new SharedMethods().returnDateHours();
+    }
 }

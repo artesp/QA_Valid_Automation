@@ -1,16 +1,16 @@
 package API;
 
 import Assistant.AddressEntity;
-import Assistant.SharedMethods;
 import Core.BaseTestAPI;
 import io.qameta.allure.Description;
 import io.restassured.http.ContentType;
+import org.hamcrest.core.IsNull;
+import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -38,34 +38,192 @@ public class ApiTests_VariableService extends BaseTestAPI {
 
     @Test
     @Description("Consultando um item existente na lista")
-    @DisplayName("Consultar item de variáveis por id")
+    @DisplayName("Consultar item da VariableList por id")
     public void listVariables_SearchValidItemByID(){
-
-        String idVariable = insertVariableListInBase();
-
+        int id = insertVariableListInBase();
         given()
                 .when()
-                .get("/variablelist/'"+ idVariable+"'")
+                .pathParam("idVariable", id)
+                .get("/variablelist/{idVariable}")
                 .then()
                 .log().all()
                 .statusCode(200)
-//               .body("name", is("string"))
-//                .body("content.findAll{it.id != 2}.size()", hasSize(0))
+                .body("name", is(variableName))
+                .body("companyId", is(8))
+                .body("brandId", is(17))
+                .body("id", notNullValue())
+        ;
+        deleteVariableListInBase(id);
+    }
+
+    @Test
+    @Description("Testando método de criação de Lista variáveis")
+    @DisplayName("Criar item no primeiro nível da lista de variáveis")
+    public void listVariables_CreateVariable(){
+        given()
+                .contentType(ContentType.JSON)
+                .body(params(createNameForTest(), 8, 17, null))
+                .when()
+                .post("/variablelist")
+                .then()
+                .log().body()
+                .statusCode(200)
+                .body("id", notNullValue())
+                .body("name", is(variableName))
+                .body("brandId", is(17))
+                .body("companyId", is(8))
+        ;
+        int id = returnInsertedItemIDByName(variableName);
+        deleteVariableListInBase(id);
+    }
+
+    @Test
+    @Description("Testando método de criação de Lista variáveis")
+    @DisplayName("Criar item sem informar companyId")
+    public void listVariables_WithoutCompanyId(){
+        given()
+                .contentType(ContentType.JSON)
+                .body(params(createNameForTest(), null, 17, null))
+                .when()
+                .post("/variablelist")
+                .then()
+                .log().body()
+                .statusCode(500)
+                .body("error", is("Internal Server Error"))
+                .body("message", containsString("Request processing failed"))
+        ;
+    }
+
+    @Test
+    @Description("Testando método de criação de Lista variáveis")
+    @DisplayName("Criar item sem informar brandId")
+    public void listVariables_WithoutBrandId(){
+        given()
+                .contentType(ContentType.JSON)
+                .body(params(createNameForTest(), 8, null, null))
+                .when()
+                .post("/variablelist")
+                .then()
+                .log().body()
+                .statusCode(200)
+                .body("id", notNullValue())
+                .body("name", is(variableName))
+                .body("brandId", nullValue())
+                .body("companyId", is(8))
+        ;
+        int id = returnInsertedItemIDByName(variableName);
+        deleteVariableListInBase(id);
+    }
+
+    @Test
+    @Description("Testando método de criação de Lista variáveis")
+    @DisplayName("Criar item sem informar Name")
+    public void listVariables_WithoutName(){
+        given()
+                .contentType(ContentType.JSON)
+                .body(params(null, 8, 17, null))
+                .when()
+                .post("/variablelist")
+                .then()
+                .log().body()
+                .statusCode(500)
+                .body("error", is("Internal Server Error"))
+                .body("message", containsString("Request processing failed"))
+        ;
+    }
+
+    @Test
+    @Description("Testando método de alteração de lista variáveis")
+    @DisplayName("Alterar item no primeiro nível da lista de variáveis")
+    public void listVariables_UpdateVariableList(){
+        int id = insertVariableListInBase();
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"name\":\"Nome Alterado\",\n" +
+                        "\"brandId\": 20,\n" +
+                        "\"companyId\": 10,\n" +
+                        "\"variables\":[]}")
+                .when()
+                .pathParam("id", id)
+                .put("/variablelist/{id}")
+                .then()
+//                .log().body()
+                .statusCode(200)
+                .body("name", is("Nome Alterado"))
+                .body("companyId", is(10))
+                .body("brandId", is(20))
+        ;
+        deleteVariableListInBase(id);
+    }
+
+
+    @Test
+    @Description("Testando método de alteração de lista variáveis")
+    @DisplayName("Alterar CompanyId para não informado")
+    public void listVariables_UpdateCompanyIdToEmpty(){
+        int id = insertVariableListInBase();
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"name\":\"Nome Alterado\",\n" +
+                        "\"brandId\": 20,\n" +
+                        "\"companyId\":,\n" +
+                        "\"variables\":[]}")
+                .when()
+                .pathParam("id", id)
+                .put("/variablelist/{id}")
+                .then()
+                .statusCode(400)
+        ;
+        deleteVariableListInBase(id);
+    }
+
+    @Test
+    @Description("Testando método de alteração de lista variáveis")
+    @DisplayName("Alterar BrandId para não informado")
+    public void listVariables_UpdateBrandIdToEmpty(){
+        int id = insertVariableListInBase();
+        given()
+                .contentType(ContentType.JSON)
+                .body("{\"name\":\"Nome Alterado\",\n" +
+                        "\"brandId\":,\n" +
+                        "\"companyId\": 8,\n" +
+                        "\"variables\":[]}")
+                .when()
+                .pathParam("id", id)
+                .put("/variablelist/{id}")
+                .then()
+                .statusCode(400)
+        ;
+        deleteVariableListInBase(id);
+    }
+
+    @Test
+    @Description("Testando método de Deleção de lista variáveis")
+    @DisplayName("Deletar item da lista de variáveis")
+    public void listVariables_DeleteItemVariableList(){
+        int id = insertVariableListInBase();
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .pathParam("id", id)
+                .delete("/variablelist/{id}")
+                .then()
+                .statusCode(200)
         ;
     }
 
 
+//    @Test
+//    public void cleanTestItens(){
+//        deleteListOfItens();
+//    }
+
 
     private void insertVariableInBase() {
+        String name = "";
         given()
                 .contentType(ContentType.JSON)
-                .body("{\"alias\": \"test_API\",\n" +
-                        "\"brandId\": 17,\n" +
-                        "\"companyId\": 8,\n" +
-                        "\"description\": \"test_API\",\n" +
-                        "\"name\": \"test_API"+dateHours()+"\",\n" +
-                        "\"variableListId\": 2\n" +
-                        "}")
+                .body(params(createNameForTest(), 8, 17, null))
                 .when()
                 .post("/variable")
                 .then()
@@ -74,38 +232,54 @@ public class ApiTests_VariableService extends BaseTestAPI {
         ;
     }
 
-    private String insertVariableListInBase(){
-        String name = "testAPI"+dateHours();
+    private int insertVariableListInBase(){
         given()
                 .contentType(ContentType.JSON)
-                .body("{ \"brandId\": \"17\",\n" +
-                        "\"companyId\": \"8\",\n" +
-                        "\"name\": \""+name+"\",\n" +
-                        "\"variables\": []}")
+                .body(params(createNameForTest(), 8, 17, null))
                 .when()
                 .post("/variablelist")
                 .then()
-                .log().all()
+//                .log().all()
                 .statusCode(200)
         ;
-        String id = returnInsertedItem(name);
+        int id = returnInsertedItemIDByName(variableName);
         return id;
     }
 
-    private String returnInsertedItem(String name){
-        ArrayList<String>ids =
+    private int returnInsertedItemIDByName(String name){
+        ArrayList<Integer>ids =
                 given()
-                        .pathParam("name",name)
                         .when()
-                        .get("/variablelist/{name}")
+                        .get("/variablelist")
                         .then()
-                        .extract().path("name.findAll{it.startsWith('"+name+"')}");
-        String result = ids.get(0);
+//                        .log().all()
+                        .extract().path("content.findAll{it.name.startsWith('"+name+"')}.id");
+        int result = ids.get(0);
         return result;
     }
 
-    private String dateHours(){
-        return new SharedMethods().returnDateHours();
+    private void deleteVariableListInBase(int id){
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .pathParam("id", id)
+                .delete("/variablelist/{id}")
+                .then()
+                .statusCode(200)
+        ;
+    }
+
+    private void deleteListOfItens(){
+        ArrayList<Integer> list =
+                given()
+                        .when()
+                        .get("/variablelist")
+                        .then()
+                        .extract().path("content.findAll{it.name.startsWith('testAPI')}.id")
+                ;
+        for (Integer id:list) {
+            deleteVariableListInBase(id);
+        }
     }
 
 
@@ -119,6 +293,13 @@ public class ApiTests_VariableService extends BaseTestAPI {
                 .get()
                 .then()
             ;
+        }
+
+        {
+            "name":"Nome Alterado",
+            "brandId": 20,
+            "companyId": 10,
+            "variables":"[]"
         }
     */
 
