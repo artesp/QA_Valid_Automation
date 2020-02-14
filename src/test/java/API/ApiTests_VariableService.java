@@ -4,8 +4,6 @@ import Assistant.AddressEntity;
 import Core.BaseTestAPI;
 import io.qameta.allure.Description;
 import io.restassured.http.ContentType;
-import org.hamcrest.core.IsNull;
-import org.junit.Ignore;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +19,8 @@ public class ApiTests_VariableService extends BaseTestAPI {
     }
 
     @Test
-    @Description("Método que lista todas as variáveis existentes")
-    @DisplayName("Listar Variáveis")
+    @Description("Método que lista todas as listas de variáveis existentes")
+    @DisplayName("Retornar todas as listas de Variáveis")
     public void listVariables(){
         given()
                 .when()
@@ -48,7 +46,7 @@ public class ApiTests_VariableService extends BaseTestAPI {
                 .then()
                 .log().all()
                 .statusCode(200)
-                .body("name", is(variableName))
+                .body("name", is(variableNameList))
                 .body("companyId", is(8))
                 .body("brandId", is(17))
                 .body("id", notNullValue())
@@ -62,18 +60,18 @@ public class ApiTests_VariableService extends BaseTestAPI {
     public void listVariables_CreateVariable(){
         given()
                 .contentType(ContentType.JSON)
-                .body(params(createNameForTest(), 8, 17, null))
+                .body(params(createNameForListTest(), 8, 17, null))
                 .when()
                 .post("/variablelist")
                 .then()
                 .log().body()
                 .statusCode(200)
                 .body("id", notNullValue())
-                .body("name", is(variableName))
+                .body("name", is(variableNameList))
                 .body("brandId", is(17))
                 .body("companyId", is(8))
         ;
-        int id = returnInsertedItemIDByName(variableName);
+        int id = returnInsertedItemIDByName(variableNameList, "variablelist");
         deleteVariableListInBase(id);
     }
 
@@ -83,7 +81,7 @@ public class ApiTests_VariableService extends BaseTestAPI {
     public void listVariables_WithoutCompanyId(){
         given()
                 .contentType(ContentType.JSON)
-                .body(params(createNameForTest(), null, 17, null))
+                .body(params(createNameForListTest(), null, 17, null))
                 .when()
                 .post("/variablelist")
                 .then()
@@ -100,18 +98,18 @@ public class ApiTests_VariableService extends BaseTestAPI {
     public void listVariables_WithoutBrandId(){
         given()
                 .contentType(ContentType.JSON)
-                .body(params(createNameForTest(), 8, null, null))
+                .body(params(createNameForListTest(), 8, null, null))
                 .when()
                 .post("/variablelist")
                 .then()
                 .log().body()
                 .statusCode(200)
                 .body("id", notNullValue())
-                .body("name", is(variableName))
+                .body("name", is(variableNameList))
                 .body("brandId", nullValue())
                 .body("companyId", is(8))
         ;
-        int id = returnInsertedItemIDByName(variableName);
+        int id = returnInsertedItemIDByName(variableNameList, "variablelist");
         deleteVariableListInBase(id);
     }
 
@@ -213,46 +211,84 @@ public class ApiTests_VariableService extends BaseTestAPI {
     }
 
 
+    @Test
+    @Description("Método que lista todas as variáveis existentes")
+    @DisplayName("Listar todas as variáveis")
+    public void variables_ListAllVariable(){
+        given()
+                .when()
+                .get("/variable")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("content", hasSize(greaterThan(0)))
+                .body("content.variables", hasSize(greaterThan(0)))
+        ;
+    }
+
+    @Test
+    @Description("Consultando um item existente na lista")
+    @DisplayName("Consultar variável por id")
+    public void variables_SearchValidItemByID(){
+        int idVariable = insertVariableInBase();
+        given()
+                .when()
+                .pathParam("idVariable", idVariable)
+                .get("/variable/{idVariable}")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body("name", is(variableName))
+                .body("companyId", is(8))
+                .body("brandId", is(17))
+                .body("id", notNullValue())
+        ;
+    }
+
+
 //    @Test
 //    public void cleanTestItens(){
 //        deleteListOfItens();
 //    }
 
 
-    private void insertVariableInBase() {
-        String name = "";
+    private int insertVariableInBase() { ;
+    int idListVariable = insertVariableListInBase();
         given()
                 .contentType(ContentType.JSON)
-                .body(params(createNameForTest(), 8, 17, null))
+                .body(params("testAPI", 8, 17, "TestAPI", createNameForVariableTest(), 0))
                 .when()
                 .post("/variable")
                 .then()
-                .log().all()
+//                .log().all()
                 .statusCode(200)
         ;
+        int id=returnInsertedItemIDByName(variableName, "variable");
+        return id;
     }
 
     private int insertVariableListInBase(){
         given()
                 .contentType(ContentType.JSON)
-                .body(params(createNameForTest(), 8, 17, null))
+                .body(params(createNameForListTest(), 8, 17, null))
                 .when()
                 .post("/variablelist")
                 .then()
 //                .log().all()
                 .statusCode(200)
         ;
-        int id = returnInsertedItemIDByName(variableName);
+        int id = returnInsertedItemIDByName(variableNameList, "variablelist");
         return id;
     }
 
-    private int returnInsertedItemIDByName(String name){
+    private int returnInsertedItemIDByName(String name, String context){
         ArrayList<Integer>ids =
                 given()
                         .when()
-                        .get("/variablelist")
+                        .pathParam("context", context)
+                        .get("/{context}")
                         .then()
-//                        .log().all()
+                        .log().body()
                         .extract().path("content.findAll{it.name.startsWith('"+name+"')}.id");
         int result = ids.get(0);
         return result;

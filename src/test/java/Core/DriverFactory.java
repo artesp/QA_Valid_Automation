@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DriverFactory {
 
-    private static String strChromeDriverPath = "Drivers/chromedriver";
+    private static String strChromeDriverPath = "Drivers/chromedriver79";
     private static File driverPath = new File(strChromeDriverPath);
     private static ChromeDriver driver;
 
