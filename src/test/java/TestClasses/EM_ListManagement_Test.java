@@ -11,9 +11,9 @@ import io.qameta.allure.Description;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class EM_ListManagement_Test extends BaseTest {
 
@@ -34,7 +34,7 @@ public class EM_ListManagement_Test extends BaseTest {
         page.clickButtonLoadList_ListManagement();
         page.nameOfList = page.typeText_ListInputName();
         page.typeText_ListInputDescription();
-        page.uploadFile_ListManagementModal();
+        page.uploadFileWithRecords_ListManagementModal();
         setUpTable();
         page.clickButtonLoad_NewListModal();
         String expected = "Lista criada com sucesso";
@@ -54,7 +54,7 @@ public class EM_ListManagement_Test extends BaseTest {
         page.typeText_ListInputName(page.nameOfList);
         System.out.println(page.nameOfList);
         page.typeText_ListInputDescription();
-        page.uploadFile_ListManagementModal();
+        page.uploadFileWithRecords_ListManagementModal();
         setUpTable();
         page.clickButtonLoad_NewListModal();
         String expected = "Erro: A tabela já existe.";
@@ -75,6 +75,93 @@ public class EM_ListManagement_Test extends BaseTest {
         assertTrue(page.elementExist_ListManagement(IdAssistant.EM_ID_LIST_INPUT_DESCRIPTION));
         assertTrue(page.elementExist_ListManagement(IdAssistant.EM_ID_LIST_INPUT_FILE));
     }
+
+    @Test
+    @Description("The List Name and Description fields should be required.")
+    @DisplayName("EM-24 : Check Required New List Name and Description Fields")
+    public void EM_24_Required_Fields_Name(){
+        accessSystem();
+        page.clickButtonMenu_ListManagement();
+        page.clickButtonLoadList_ListManagement();
+        //page.nameOfList = page.typeText_ListInputName();
+        page.typeText_ListInputDescription();
+        page.uploadFileWithRecords_ListManagementModal();
+        setUpTable();
+        boolean isEnabled = page.elementIsEnabledEM(By.xpath(PathAssistant.PATH_BUTTON_LOAD));
+        System.out.println("Elements is "+isEnabled);
+        assertFalse(isEnabled);
+    }
+
+    @Test
+    @Description("The List Name and Description fields should be required.")
+    @DisplayName("EM-24 : Check Required New List Name and Description Fields")
+    public void EM_24_Required_Fields_Description(){
+        accessSystem();
+        page.clickButtonMenu_ListManagement();
+        page.clickButtonLoadList_ListManagement();
+        page.nameOfList = page.typeText_ListInputName();
+        //page.typeText_ListInputDescription();
+        page.uploadFileWithRecords_ListManagementModal();
+        setUpTable();
+        boolean isEnabled = page.elementIsEnabledEM(By.xpath(PathAssistant.PATH_BUTTON_LOAD));
+        System.out.println("Elements is "+isEnabled);
+        assertFalse(isEnabled);
+    }
+
+    @Test
+    @Description("Check system behavior with files containing multiple records.")
+    @DisplayName("EM-25 : Check file upload with more than 3 records ")
+    public void EM_25_Upload_file_with_more_3_records(){
+        accessSystem();
+        page.clickButtonMenu_ListManagement();
+        page.clickButtonLoadList_ListManagement();
+        page.nameOfList = page.typeText_ListInputName();
+        page.typeText_ListInputDescription();
+        page.uploadFileWithRecords_ListManagementModal();
+        setUpTable();
+        page.clickButtonLoad_NewListModal();
+        String expected = "Lista criada com sucesso";
+        String msg = page.getTextElementByXpath_ListManagement(PathAssistant.PATH_TOAST_CONTAINER);
+        System.out.println(expected +" | "+msg );
+        assertEquals(expected, msg);
+    }
+
+    @Test
+    @Description("Verify system behavior with inválid file upload")
+    @DisplayName("EM-27 : Verify File Upload without Variables and Records.")
+    public void EM_27_Upload_file_with_no_records(){
+        accessSystem();
+        page.clickButtonMenu_ListManagement();
+        page.clickButtonLoadList_ListManagement();
+        page.nameOfList = page.typeText_ListInputName();
+        page.typeText_ListInputDescription();
+        page.uploadFileNoRecords_ListManagementModal();
+        //setUpTable();
+        page.clickButtonLoad_NewListModal();
+        String expected = "não foi possivel realizar à requisição. Por favor verifique se todos os dados estão corretos.";
+        String msg = page.getTextElementByXpath_ListManagement(PathAssistant.PATH_TOAST_CONTAINER);
+        System.out.println(expected +" | "+msg );
+        assertEquals(expected, msg);
+    }
+
+    @Test
+    @Description("Verify system behavior with file that contains comma in records")
+    @DisplayName("EM-23 : Upload file that contains comma in your records")
+    public void EM_23_Upload_file_with_comma(){
+        accessSystem();
+        page.clickButtonMenu_ListManagement();
+        page.clickButtonLoadList_ListManagement();
+        page.nameOfList = page.typeText_ListInputName();
+        page.typeText_ListInputDescription();
+        page.uploadFileWithComma_ListManagementModal();
+        setUpTable();
+        page.clickButtonLoad_NewListModal();
+        String expected = "Lista criada com sucesso";
+        String msg = page.getTextElementByXpath_ListManagement(PathAssistant.PATH_TOAST_CONTAINER);
+        System.out.println(expected +" | "+msg );
+        assertEquals(expected, msg);
+    }
+
 
     private void setUpTable(){
         page.clickDropDown_ListManagementModal("1");

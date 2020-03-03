@@ -6,7 +6,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +13,12 @@ import static Core.DriverFactory.getDriver;
 
 public class BasePage {
 
-    private String strCSVPath = "CSV/Pasta1.csv";
-    private File pathFile = new File(strCSVPath);
-
+    private String strCSVWithRecords = "CSV/Pasta1.csv";
+    private String strCSVWithoutRecords = "CSV/noRecords.csv";
+    private String strCSVWithComma = "CSV/recordsWithComma.csv";
+    private File pathFileWithRecords = new File(strCSVWithRecords);
+    private File pathFileNoRecords = new File(strCSVWithoutRecords);
+    private File pathFileWithComma = new File(strCSVWithComma);
     private JavascriptExecutor js = getDriver();
 
     protected void clickButton(By by){
@@ -98,10 +100,24 @@ public class BasePage {
         return actualText;
     }
 
-    protected void uploadFile(){
+    protected void uploadFileWithRecords(){
         WebElement upload = getDriver().findElement(By.id(IdAssistant.EM_ID_LIST_INPUT_FILE));
-        upload.sendKeys(pathFile.getAbsolutePath());
-        System.out.println(pathFile.getAbsolutePath());
+        upload.sendKeys(pathFileWithRecords.getAbsolutePath());
+        System.out.println(pathFileWithRecords.getAbsolutePath());
+        waitForLoad(2000);
+    }
+
+    protected void uploadFileNoRecords(){
+        WebElement upload = getDriver().findElement(By.id(IdAssistant.EM_ID_LIST_INPUT_FILE));
+        upload.sendKeys(pathFileNoRecords.getAbsolutePath());
+        System.out.println(pathFileNoRecords.getAbsolutePath());
+        waitForLoad(2000);
+    }
+
+    protected void uploadFileWithComma(){
+        WebElement upload = getDriver().findElement(By.id(IdAssistant.EM_ID_LIST_INPUT_FILE));
+        upload.sendKeys(pathFileWithComma.getAbsolutePath());
+        System.out.println(pathFileWithComma.getAbsolutePath());
         waitForLoad(2000);
     }
 

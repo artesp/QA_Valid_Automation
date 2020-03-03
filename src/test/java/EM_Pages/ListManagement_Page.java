@@ -62,6 +62,10 @@ public class ListManagement_Page extends BasePage {
         return exists;
     }
 
+    public boolean elementIsEnabledEM(By by){
+        return elementIsEnabled(by);
+    }
+
     public String getTextElementByXpath_ListManagement(String path){
         String text = getTextElementByXpath(path);
         return text;
@@ -71,8 +75,16 @@ public class ListManagement_Page extends BasePage {
         clickButton(By.id(IdAssistant.EM_ID_LIST_INPUT_FILE));
     }
 
-    public void uploadFile_ListManagementModal(){
-        uploadFile();
+    public void uploadFileWithRecords_ListManagementModal(){
+        uploadFileWithRecords();
+    }
+
+    public void uploadFileNoRecords_ListManagementModal(){
+        uploadFileNoRecords();
+    }
+
+    public void uploadFileWithComma_ListManagementModal(){
+        uploadFileWithComma();
     }
 
     public void clickDropDown_ListManagementModal(String positionLine){
