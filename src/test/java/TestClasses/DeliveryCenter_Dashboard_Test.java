@@ -76,7 +76,7 @@ public class DeliveryCenter_Dashboard_Test extends BaseTest {
 
 
     private void setUrl() {
-        AddressEntity.setUrl(UrlSystemAssistant.URL_DEV_DATAPORTAL);
+        AddressEntity.setURL(UrlSystemAssistant.URL_DEV_DATAPORTAL);
     }
 
 }

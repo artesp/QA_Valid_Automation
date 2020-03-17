@@ -73,6 +73,16 @@ public class ReportBuilder {
         }
     }
 
+
+    public static void clearIMGDownloadsDirectory(){
+        File dir = new File("IMGs/Downloads/");
+        for (File file:dir.listFiles()) {
+            if(!file.isDirectory()){
+                file.delete();
+            }
+        }
+    }
+
     public String getDateTime(){
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");

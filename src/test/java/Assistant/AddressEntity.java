@@ -2,22 +2,31 @@ package Assistant;
 
 public class AddressEntity {
 
-    public static String getUrl() {
+    public static String URL;
+    public static String BaseURI;
+    public static String BasePath;
+
+    public static String getURL() {
         return URL;
     }
 
-    public static void setUrl(String _url) {
-        URL = _url;
+    public static void setURL(String URL) {
+        AddressEntity.URL = URL;
     }
 
-    public static String getBasePath(){
+    public static String getBaseURI() {
+        return BaseURI;
+    }
+
+    public static void setBaseURI(String baseURI) {
+        BaseURI = baseURI;
+    }
+
+    public static String getBasePath() {
         return BasePath;
     }
 
-    public static void setBasePath(String _basePath){
-        BasePath = _basePath;
+    public static void setBasePath(String basePath) {
+        BasePath = basePath;
     }
-
-    public static String URL;
-    public static String BasePath;
 }

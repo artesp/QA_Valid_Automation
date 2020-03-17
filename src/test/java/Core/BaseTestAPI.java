@@ -2,6 +2,7 @@ package Core;
 
 import Assistant.AddressEntity;
 import Assistant.SharedMethods;
+import ReportBuilder.ReportBuilder;
 import com.itextpdf.text.DocumentException;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static ReportBuilder.ReportBuilder.clearDirectory;
+import static ReportBuilder.ReportBuilder.clearIMGDownloadsDirectory;
 
 public class BaseTestAPI {
 
@@ -28,16 +30,18 @@ public class BaseTestAPI {
 
     public static String variableNameList;
     public static String variableName;
+    public static String imageName;
 
 
     @BeforeAll
     public static void classInitialize(){
         clearDirectory();
+        clearIMGDownloadsDirectory();
     }
 
     @BeforeEach
     public void testInitialize(){
-        RestAssured.baseURI= "https://devinject.validsolutions.net/";
+        RestAssured.baseURI= AddressEntity.getBaseURI();
         RestAssured.basePath = AddressEntity.getBasePath();
 
         reqBuilder = new RequestSpecBuilder();
@@ -49,12 +53,17 @@ public class BaseTestAPI {
 
     @AfterAll
     public static void classCleanup() throws FileNotFoundException, DocumentException {
-//        new ReportBuilder().pdfBuilderBatch();
+        new ReportBuilder().pdfBuilderBatch();
     }
 
     public String createNameForListTest(){
         variableNameList = "testListAPI"+dateHours();
         return variableNameList;
+    }
+
+    public String createNameForImageTest(){
+     imageName = "testImageAPI"+dateHours();
+     return imageName;
     }
 
     public String createNameForVariableTest(){

@@ -24,7 +24,7 @@ public class BaseTest {
 
     @BeforeEach
     public void testInitialize(){
-        openBrowser(AddressEntity.getUrl());
+        openBrowser(AddressEntity.getURL());
     }
 
     @AfterEach

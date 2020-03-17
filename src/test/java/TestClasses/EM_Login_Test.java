@@ -36,6 +36,6 @@ public class EM_Login_Test extends BaseTest {
     }
 
     private void setUrl() {
-        AddressEntity.setUrl(UrlSystemAssistant.URL_PROD_EM);
+        AddressEntity.setURL(UrlSystemAssistant.URL_PROD_EM);
     }
 }

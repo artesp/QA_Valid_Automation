@@ -186,7 +186,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     private void setUrl() {
-        AddressEntity.setUrl(UrlSystemAssistant.URL_PROD_EM);
+        AddressEntity.setURL(UrlSystemAssistant.URL_HOM_EM);
     }
 
     private void accessSystem(){
