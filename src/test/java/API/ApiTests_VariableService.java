@@ -1,6 +1,7 @@
 package API;
 
 import Assistant.AddressEntity;
+import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
 import io.qameta.allure.Description;
 import io.restassured.http.ContentType;
@@ -15,6 +16,7 @@ import static org.hamcrest.Matchers.*;
 public class ApiTests_VariableService extends BaseTestAPI {
 
     public ApiTests_VariableService() {
+        setBaseURI();
         setBasePath();
     }
 
@@ -253,7 +255,7 @@ public class ApiTests_VariableService extends BaseTestAPI {
 
 
     private int insertVariableInBase() { ;
-    int idListVariable = insertVariableListInBase();
+        int idListVariable = insertVariableListInBase();
         given()
                 .contentType(ContentType.JSON)
                 .body(params("testAPI", 8, 17, "TestAPI", createNameForVariableTest(), 0))
@@ -338,6 +340,10 @@ public class ApiTests_VariableService extends BaseTestAPI {
             "variables":"[]"
         }
     */
+
+    private void setBaseURI(){
+        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_DEV);
+    }
 
     public void setBasePath(){
         AddressEntity.setBasePath("variableservicems/deutsche");
