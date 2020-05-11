@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class BaseTestAPI {
 
     @AfterAll
     public static void classCleanup() throws FileNotFoundException, DocumentException {
-        new ReportBuilder().pdfBuilderBatch();
+//        new ReportBuilder().pdfBuilderBatch();
     }
 
     public String createNameForListTest(){
@@ -94,4 +95,10 @@ public class BaseTestAPI {
     private String dateHours(){
         return new SharedMethods().returnDateHours();
     }
+
+//    private File createFileCSVForTesting(){
+//
+//    }
+
+
 }

@@ -1,6 +1,7 @@
 package API;
 
 import Assistant.AddressEntity;
+import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
 import io.qameta.allure.Description;
 import io.restassured.http.ContentType;
@@ -25,6 +26,7 @@ public class ApiTests_CampaignService extends BaseTestAPI {
 
 
     public ApiTests_CampaignService() {
+        setBaseURI();
         setBasePath();
     }
 
@@ -110,6 +112,9 @@ public class ApiTests_CampaignService extends BaseTestAPI {
     */
 
 
+    private void setBaseURI() {
+        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
+    }
 
     public void setBasePath(){
         AddressEntity.setBasePath("campaignservicems/deutsche/campaignstate");

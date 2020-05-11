@@ -4,9 +4,6 @@ import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
 import io.qameta.allure.Description;
-import io.restassured.http.ContentType;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -53,7 +50,7 @@ public class ApiTests_FileTransferService extends BaseTestAPI {
     }
 
     @Test
-    @Description("Método que retorna detalhes de um arquivo transferido por id existente")
+    @Description("Método que retorna detalhes de um arquivo transferido por id inexistente")
     @DisplayName("Verificar retorno com id inexistente.")
     public void search_FileTransfer_WithAnNotExistingId(){
         given()
@@ -81,7 +78,6 @@ public class ApiTests_FileTransferService extends BaseTestAPI {
         ;
     }
 
-
     @Test
     @Description("Método realiza o upload do arquivo")
     @DisplayName("Upload de arquivo informando BrandId")
@@ -106,27 +102,6 @@ public class ApiTests_FileTransferService extends BaseTestAPI {
     private File fileToUpload(String fileName){
         return new File("CSV/"+fileName);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private void setBaseURI() {
         AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);

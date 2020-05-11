@@ -14,5 +14,6 @@ public class UrlSystemAssistant {
 
     public static final String APITEST_URI_DEV = "http://10.198.101.229/";
     public static final String APITEST_URI_HOMOLOG = "http://10.198.106.82/";
+    public static final String APITEST_URI_PROD = "http://10.198.106.11";
 
 }
