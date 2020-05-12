@@ -9,12 +9,13 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import jdk.nashorn.api.scripting.JSObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.json.Json;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -99,6 +100,60 @@ public class BaseTestAPI {
 //    private File createFileCSVForTesting(){
 //
 //    }
+
+    public String barCodesToTest_MultipleNumbers(){
+       return new String ("{\n" +
+               "    \"brandId\": 17,\n" +
+               "    \"barcodes\": [\n" +
+               "        \"84660000000099200820899942389254098312620001\",\n" +
+               "        \"84660000000099200820899942389254098312620002\",\n" +
+               "        \"84660000000099200820899942389254098312620003\",\n" +
+               "        \"84660000000099200820899942389254098312620004\",\n" +
+               "        \"84660000000099200820899942389254098312620005\",\n" +
+               "        \"84660000000099200820899942389254098312620006\",\n" +
+               "        \"84660000000099200820899942389254098312620007\",\n" +
+               "        \"84660000000099200820899942389254098312620008\",\n" +
+               "        \"84660000000099200820899942389254098312620009\",\n" +
+               "        \"84660000000099200820899942389254098312620010\",\n" +
+               "        \"84660000000099200820899942389254098312620011\"\n" +
+               "    ]\n" +
+               "}").toString();
+    }
+
+    public String barCodesToTest_OnlyOneNumber(){
+        return new String("{\n" +
+                "    \"brandId\": 17,\n" +
+                "    \"barcodes\": [\n" +
+                "        \"84660000000099200820899942389254098312620001\"\n" +
+                "    ]\n" +
+                "}");
+    }
+
+    public String barCodesTotest_CustomizeANumber(String customNumber){
+        return new String("{\n" +
+                "    \"brandId\": 17,\n" +
+                "    \"barcodes\": [\n" +
+                "      \""+customNumber+"\"\n" +
+                "    ]\n" +
+                "}");
+    }
+
+    public void downloadLocally(byte[] file, String extention) {
+
+        OutputStream fileOutputStream;
+        try {
+            fileOutputStream = new FileOutputStream("IMGs/Downloads/"+createNameForImageTest()+extention);
+            fileOutputStream.write(file);
+            fileOutputStream.close();
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+    }
+
+
 
 
 }

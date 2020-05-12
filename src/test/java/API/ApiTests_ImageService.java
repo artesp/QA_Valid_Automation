@@ -199,19 +199,4 @@ public class ApiTests_ImageService extends BaseTestAPI {
         AddressEntity.setBasePath("/imageservicems/deutsche/imageservice");
     }
 
-    private void downloadLocally(byte[] file, String extention) {
-
-        OutputStream fileOutputStream;
-        try {
-            fileOutputStream = new FileOutputStream("IMGs/Downloads/"+createNameForImageTest()+extention);
-            fileOutputStream.write(file);
-            fileOutputStream.close();
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-    }
-
 }
