@@ -25,7 +25,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para upload de arquivo")
     @DisplayName("Realizar upload de arquivo de imagen valido JPG")
-    public void fileTransfer_upload_validFile_JPG(){
+    public void imageService_upload_validFile_JPG(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
@@ -42,7 +42,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para upload de arquivo")
     @DisplayName("Realizar upload de arquivo de imagen valido PNG")
-    public void fileTransfer_upload_validFile_PNG(){
+    public void imageService_upload_validFile_PNG(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
@@ -59,7 +59,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para upload de arquivo")
     @DisplayName("Realizar upload de arquivo de imagen valido JPEG")
-    public void fileTransfer_upload_validFile_JPEG(){
+    public void imageService_upload_validFile_JPEG(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
@@ -76,7 +76,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para upload de arquivo")
     @DisplayName("Realizar upload de arquivo de imagen valido TIFF maior que o especificado")
-    public void fileTransfer_upload_validFile_TIFF_greaterThanSpecified(){
+    public void imageService_upload_validFile_TIFF_greaterThanSpecified(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
@@ -93,7 +93,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para upload de arquivo")
     @DisplayName("Realizar upload de arquivo de imagen valido BMP maior que o especificado")
-    public void fileTransfer_upload_validFile_BMP_greaterThanSpecified(){
+    public void imageService_upload_validFile_BMP_greaterThanSpecified(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
@@ -111,7 +111,9 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para download de arquivo")
     @DisplayName("Realizar download do arquivo de imagen - JPG")
-    public void fileTransfer_Download_validFile_JPG(){
+    public void imageService_Download_validFile_JPG(){
+        uploadImage("spartanskull02.jpg", 17);
+
         byte[] file = given()
                 .when()
                 .log().all()
@@ -122,12 +124,12 @@ public class ApiTests_ImageService extends BaseTestAPI {
         downloadLocally(file, ".jpg");
         assertTrue(file.length > 0);
         assertThat(file, notNullValue());
-    }
+   }
 
     @Test
     @Description("Método  para download de arquivo")
     @DisplayName("Realizar download do arquivo de imagen - JPEG")
-    public void fileTransfer_Download_validFile_JPEG(){
+    public void imageService_Download_validFile_JPEG(){
         byte[] file = given()
                 .when()
                 .log().all()
@@ -143,7 +145,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para download de arquivo")
     @DisplayName("Realizar download do arquivo de imagen - PNG")
-    public void fileTransfer_Download_validFile_PNG(){
+    public void imageService_Download_validFile_PNG(){
         byte[] file = given()
                 .when()
                 .log().all()
@@ -159,7 +161,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para download de arquivo")
     @DisplayName("Realizar download do arquivo de imagen inexistente - TIFF")
-    public void fileTransfer_Download_validFile_TIFF_Invalid(){
+    public void imageService_Download_validFile_TIFF_Invalid(){
         given()
                 .when()
                 .log().all()
@@ -173,7 +175,7 @@ public class ApiTests_ImageService extends BaseTestAPI {
     @Test
     @Description("Método  para download de arquivo")
     @DisplayName("Realizar download do arquivo de imagen inexistente - BMP")
-    public void fileTransfer_Download_validFile_BMP_Invalid(){
+    public void imageService_Download_validFile_BMP_Invalid(){
         given()
                 .when()
                 .log().all()
@@ -189,6 +191,20 @@ public class ApiTests_ImageService extends BaseTestAPI {
 
     private File fileToUpload(String fileName){
         return new File("IMGs/"+fileName);
+    }
+
+    private void uploadImage(String imageName, int brandId){
+        given()
+                .contentType("multipart/form-data")
+                .multiPart("brandId", brandId)
+                .multiPart("file", fileToUpload(imageName))
+                .when()
+                .post("/upload")
+                .then()
+                .log().all()
+                .statusCode(200)
+                .body(containsString("File Uploaded Success"))
+        ;
     }
 
     private void setBaseURI(){

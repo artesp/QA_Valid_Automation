@@ -144,7 +144,7 @@ public class ApiTests_BarCodeBuilderms extends BaseTestAPI {
     }
 
     public void setBasePath(){
-        AddressEntity.setBasePath("barcodebuilderms/deutsche/");
+        AddressEntity.setBasePath("barcodebuilderms/deutsche");
     }
 
 }

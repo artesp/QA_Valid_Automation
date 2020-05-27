@@ -47,15 +47,16 @@ public class BaseTestAPI {
         RestAssured.basePath = AddressEntity.getBasePath();
 
         reqBuilder = new RequestSpecBuilder();
-        reqBuilder.log(LogDetail.ALL);
+//        reqBuilder.log(LogDetail.ALL);
         reqSpec = reqBuilder.build();
 
         RestAssured.requestSpecification = reqSpec;
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     @AfterAll
     public static void classCleanup() throws FileNotFoundException, DocumentException {
-//        new ReportBuilder().pdfBuilderBatch();
+        //new ReportBuilder().pdfBuilderBatch();
     }
 
     public String createNameForListTest(){
