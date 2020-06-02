@@ -33,6 +33,7 @@ public class DriverFactory {
         options.addArguments("--disable-default-apps");
         options.addArguments("test-type=browser");
         options.addArguments("disable-infobars");
+//        options.addArguments("--headless");
         options.addArguments("incognito");
 
         driver  = new ChromeDriver(options);

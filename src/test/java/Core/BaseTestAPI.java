@@ -56,7 +56,7 @@ public class BaseTestAPI {
 
     @AfterAll
     public static void classCleanup() throws FileNotFoundException, DocumentException {
-        //new ReportBuilder().pdfBuilderBatch();
+//        new ReportBuilder().pdfBuilderBatch();
     }
 
     public String createNameForListTest(){
