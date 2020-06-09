@@ -11,6 +11,8 @@ import io.restassured.mapper.ObjectMapperSerializationContext;
 import org.junit.Assert;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,10 +24,11 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class ApiTests_CampaignService extends BaseTestAPI {
+@RunWith(JUnitPlatform.class)
+public class ApiTests_CampaignService_State extends BaseTestAPI {
 
 
-    public ApiTests_CampaignService() {
+    public ApiTests_CampaignService_State() {
         setBaseURI();
         setBasePath();
     }

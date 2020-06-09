@@ -6,6 +6,8 @@ import Core.BaseTestAPI;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.io.*;
 
@@ -15,6 +17,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnitPlatform.class)
 public class ApiTests_ImageService extends BaseTestAPI {
 
     public ApiTests_ImageService() {

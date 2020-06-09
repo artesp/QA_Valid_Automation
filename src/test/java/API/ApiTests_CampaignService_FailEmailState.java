@@ -5,14 +5,17 @@ import Core.BaseTestAPI;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 
-public class ApiTests_FailEmailState extends BaseTestAPI {
+@RunWith(JUnitPlatform.class)
+public class ApiTests_CampaignService_FailEmailState extends BaseTestAPI {
 
-    public ApiTests_FailEmailState() {
+    public ApiTests_CampaignService_FailEmailState() {
         setBasePath();
     }
 

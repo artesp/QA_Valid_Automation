@@ -4,26 +4,26 @@ import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
 import io.qameta.allure.Description;
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import io.restassured.specification.FilterableRequestSpecification;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.*;
+import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@RunWith(JUnitPlatform.class)
 public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
 
     private int idProduct;
@@ -94,7 +94,6 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
                 .get("print-state")
                 .then()
                 .statusCode(200)
-                .log().all()
                 .body("content.id", contains(idPrintState))
         ;
     }

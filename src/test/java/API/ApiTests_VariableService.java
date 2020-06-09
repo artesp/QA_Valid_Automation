@@ -7,12 +7,15 @@ import io.qameta.allure.Description;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.util.ArrayList;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
+@RunWith(JUnitPlatform.class)
 public class ApiTests_VariableService extends BaseTestAPI {
 
     public ApiTests_VariableService() {
@@ -342,7 +345,7 @@ public class ApiTests_VariableService extends BaseTestAPI {
     */
 
     private void setBaseURI(){
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_DEV);
+        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
     }
 
     public void setBasePath(){

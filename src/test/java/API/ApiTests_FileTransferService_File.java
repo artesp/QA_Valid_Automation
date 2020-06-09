@@ -4,28 +4,33 @@ import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
 import io.qameta.allure.Description;
-import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.runner.RunWith;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
-import static java.lang.Thread.*;
+import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-public class ApiTests_FileTransferService extends BaseTestAPI {
+@RunWith(JUnitPlatform.class)
+public class ApiTests_FileTransferService_File extends BaseTestAPI {
 
     private int idFile;
 
-    public ApiTests_FileTransferService() {
+    public ApiTests_FileTransferService_File() {
         setBaseURI();
         setBasePath();
     }
@@ -122,6 +127,123 @@ public class ApiTests_FileTransferService extends BaseTestAPI {
         assertNotNull(idFile);
     }
 
+    @Test
+    @Description("Put - Realiza o alteração do arquivo")
+    @DisplayName("Alterar arquivo com BrandId")
+    public void put_FileTransfer_UpdateWithBrandId(){
+        given()
+                .when()
+                .contentType(JSON)
+                .pathParam("id", idFile)
+                .body(fileParameters(1,
+                        17,
+                        "2020-06-08",
+                        "ArquivoAlterado",
+                        10))
+                .put("/file/{id}")
+                .then()
+                .statusCode(200)
+                .body("id", is(idFile))
+                .body("name", is("ArquivoAlterado"))
+                .body("creationDate", is("2020-06-08"))
+                .body("fileType", is("ZIP"))
+                .body("application", is("REPORT"))
+                .body("brandId", is(17))
+        ;
+    }
+
+    @Test
+    @Description("Put - Realiza o alteração do arquivo")
+    @DisplayName("Alterar arquivo sem BrandId")
+    public void put_FileTransfer_UpdateWithoudBrandId(){
+        clearFiles(idFile);
+        idFile = uploadFileToTest(
+                2,
+                10,
+                "DEUTSCHE_INCLUSAO_EMAIL_20200529_155700_002.zip");
+        given()
+                .when()
+                .contentType(JSON)
+                .pathParam("id", idFile)
+                .body(fileParameters(1,
+                        "2020-06-08",
+                        "ArquivoAlterado",
+                        10))
+                .put("/file/{id}")
+                .then()
+                .statusCode(200)
+                .body("id", is(idFile))
+                .body("name", is("ArquivoAlterado"))
+                .body("creationDate", is("2020-06-08"))
+                .body("fileType", is("ZIP"))
+                .body("application", is("REPORT"))
+        ;
+    }
+
+    @Test
+    @Description("Post - Realiza upload do arquivo")
+    @DisplayName("Upload de arquivo .7z")
+    public void post_FileTransfer_CreateFileZevenZip(){
+        clearFiles(idFile);
+        idFile = uploadFileToTest(
+                2,
+                17,
+                10,
+                "DEUTSCHE_BOLETOS_20200.7z");
+        given()
+                .pathParam("id", idFile)
+                .when()
+                .get("/file/{id}")
+                .then()
+                .body("fileType", is("SEVEN_ZIP"))
+                .body("name", is("DEUTSCHE_BOLETOS_20200.7z"))
+        ;
+    }
+
+    @Test
+    @Description("Post - Realiza upload do arquivo")
+    @DisplayName("Upload de arquivo PDF")
+    public void post_FileTransfer_CreateFilePDF(){
+        clearFiles(idFile);
+        idFile = uploadFileToTest(
+                2,
+                17,
+                10,
+                "DEUTSCHE_BOLETOS_20200103_002.pdf");
+        given()
+                .pathParam("id", idFile)
+                .when()
+                .get("/file/{id}")
+                .then()
+                .body("fileType", is("PDF"))
+                .body("name", is("DEUTSCHE_BOLETOS_20200103_002.pdf"))
+        ;
+    }
+
+    @Test
+    @Description("Post - Realiza upload do arquivo")
+    @DisplayName("Upload de arquivo RET")
+    public void post_FileTransfer_CreateFileRET(){
+        clearFiles(idFile);
+        idFile = uploadFileToTest(
+                2,
+                17,
+                10,
+                "gra0402202001.RET");
+        given()
+                .pathParam("id", idFile)
+                .when()
+                .get("/file/{id}")
+                .then()
+                .body("fileType", is("RET"))
+                .body("name", is("gra0402202001.RET"))
+        ;
+    }
+
+
+
+
+
     private int uploadFileToTest(int applicationId, int brandId, int targetId, String fileName){
         Response response = (Response) given()
                 .contentType("multipart/form-data")
@@ -161,15 +283,34 @@ public class ApiTests_FileTransferService extends BaseTestAPI {
         return idFile;
     }
 
+    private Map<String, Object> fileParameters(int appId, int brandId,String creationDate, String name, int targetId){
+        Map<String, Object> param = new HashMap<>();
+        param.put("applicationId", appId);
+        param.put("brandId", brandId);
+        param.put("creationDate", creationDate);
+        param.put("name", name);
+        param.put("targetId", targetId);
+        return param;
+    }
+
+    private Map<String, Object> fileParameters(int appId,String creationDate, String name, int targetId){
+        Map<String, Object> param = new HashMap<>();
+        param.put("applicationId", appId);
+        param.put("creationDate", creationDate);
+        param.put("name", name);
+        param.put("targetId", targetId);
+        return param;
+    }
+
     private String getFileExists(){
         ArrayList<String> response =
                 given()
-                .when()
-                .get("/file")
-                .then()
-                .log().all()
-                .statusCode(200)
-                .extract().path("content.name", String.valueOf(hasItem("atlas_plural_20200505.zip")));
+                        .when()
+                        .get("/file")
+                        .then()
+                        .log().all()
+                        .statusCode(200)
+                        .extract().path("content.name", String.valueOf(hasItem("atlas_plural_20200505.zip")));
         return String.valueOf(response);
     }
 
