@@ -3,79 +3,68 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import org.junit.Assert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ApiTests_BarCodeBuilderms extends BaseTestAPI {
 
-    public ApiTests_BarCodeBuilderms() {
-        setBasePath();
-        setBaseURI();
-    }
-
+    String path = "barcodebuilderms/deutsche";
 
     @Test
-    @Description("Post - Envia um Json com número de código de barras e linhas digitáveis")
-    @DisplayName("Criar código de barras - BarCode - Vários números no Json")
-    public void post_barcodebuilder_variosNumerosNaLista(){
+    public void post_CriarCodigoDeBarras_VariosNumerosNaLista(){
         given()
-                .contentType("application/json")
+                .contentType(ContentType.JSON)
                 .body(barCodesToTest_MultipleNumbers())
                 .when()
-                .post("/barcode")
+                .post(path + "/barcode")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body(containsString("-"))
         ;
     }
 
     @Test
-    @Description("Post - Envia um Json com número de código de barras e linhas digitáveis")
-    @DisplayName("Criar código de barras - BarCode - Um número no Json")
-    public void post_barcodebuilder_umNumeroNaLista(){
+    public void post_CriarCodigoDeBarras_UmNumeroNaLista(){
         given()
-                .contentType("application/json")
+                .contentType(ContentType.JSON)
                 .body(barCodesToTest_OnlyOneNumber())
                 .when()
-                .post("/barcode")
+                .post(path + "/barcode")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body(containsString("-"))
         ;
     }
 
     @Test
-    @Description("Post - Envia um Json com número de código de barras e linhas digitáveis")
-    @DisplayName("Criar código de barras - BarCode - Sequência de 44 posições no Json")
-    public void post_barcodebuilder_umNumeroAleatorioNaLista(){
+    public void post_CriarCodigoDeBarras_umNumeroAleatorioNaLista(){
         given()
-                .contentType("application/json")
+                .contentType(ContentType.JSON)
                 .body(barCodesTotest_CustomizeANumber("12345678901234567890123456789012345678901234"))
                 .when()
-                .post("/barcode")
+                .post(path + "/barcode")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body(containsString("-"))
         ;
     }
 
     @Test
-    @Description("Get - Valida o protocolo")
-    @DisplayName("Consultar procotolo - Get_Protocol")
-    public void get_barcodebuilder_GetProtocol(){
+    public void get_CriarCodigoDeBarras_ConsultarProtocolo(){
         String protocol = generateProtocol();
         String status;
         do {
@@ -85,9 +74,7 @@ public class ApiTests_BarCodeBuilderms extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Download do arquivo existente no S3")
-    @DisplayName("(ImageService)Download do PNG existente no S3")
-    public void get_barcodebuilder_GetS3(){
+    public void get_CriarCodigoDeBarras_DownloadPNGExistenteNoS3(){
         generateProtocol();
         byte[] file = given()
                 .contentType("application/json")
@@ -98,26 +85,17 @@ public class ApiTests_BarCodeBuilderms extends BaseTestAPI {
                 .extract().asByteArray();
         downloadLocally(file, ".png");
         assertTrue(file.length > 0);
-        assertThat(file, notNullValue());
+        assertNotNull(file);
     }
 
-
-
-
-    /*@Test
-    @Description("")
-    @DisplayName("")
-    public void test(){
-
-    }*/
 
     private String generateProtocol(){
         Response response =
                 (Response) given()
-                        .contentType("application/json")
+                        .contentType(ContentType.JSON)
                         .body(barCodesToTest_OnlyOneNumber())
                         .when()
-                        .post("/barcode")
+                        .post(path + "/barcode")
                         .then()
                         .statusCode(200).extract();
 
@@ -129,22 +107,53 @@ public class ApiTests_BarCodeBuilderms extends BaseTestAPI {
     private String checkStatus_GetProtocol(String protocol) {
         Response response =
                 (Response) given()
-                        .contentType("application/json")
+                        .contentType(ContentType.JSON)
                         .pathParam("protocol", protocol)
                         .when()
-                        .get("/barcode/{protocol}")
+                        .get(path + "/barcode/{protocol}")
                         .then()
                         .statusCode(200).extract();
         ResponseBody body = response.getBody();
         return new String(body.asString());
     }
 
-    private void setBaseURI() {
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
+
+    private Map<String, Object>  barCodesToTest_MultipleNumbers(){
+        Map<String, Object> paramMultipleNumbers = new HashMap<>();
+        paramMultipleNumbers.put("brandId", 17);
+        paramMultipleNumbers.put("barcodes",
+                new ArrayList<String>(Arrays.asList(
+                        "84660000000099200820899942389254098312620001",
+                        "84660000000099200820899942389254098312620002",
+                        "84660000000099200820899942389254098312620003",
+                        "84660000000099200820899942389254098312620004",
+                        "84660000000099200820899942389254098312620001",
+                        "84660000000099200820899942389254098312620002",
+                        "84660000000099200820899942389254098312620003",
+                        "84660000000099200820899942389254098312620004",
+                        "84660000000099200820899942389254098312620005",
+                        "84660000000099200820899942389254098312620006",
+                        "84660000000099200820899942389254098312620007",
+                        "84660000000099200820899942389254098312620008",
+                        "84660000000099200820899942389254098312620009",
+                        "84660000000099200820899942389254098312620010",
+                        "84660000000099200820899942389254098312620011")));
+        return paramMultipleNumbers;
     }
 
-    public void setBasePath(){
-        AddressEntity.setBasePath("barcodebuilderms/deutsche");
+    private Map<String, Object> barCodesToTest_OnlyOneNumber(){
+        Map<String, Object> paramOnlyNumber = new HashMap<>();
+        paramOnlyNumber.put("brandId", 17);
+        paramOnlyNumber.put("barcodes", new ArrayList<String>(Arrays.asList("84660000000099200820899942389254098312620001")));
+        return paramOnlyNumber;
     }
+
+    private Map<String, Object> barCodesTotest_CustomizeANumber(String customNumber){
+        Map<String, Object> paramCustomizeNumber = new HashMap<>();
+        paramCustomizeNumber.put("brandId", 17);
+        paramCustomizeNumber.put("barcodes", new ArrayList<String>(Arrays.asList(customNumber)));
+        return paramCustomizeNumber;
+    }
+
 
 }

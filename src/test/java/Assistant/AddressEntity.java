@@ -26,7 +26,7 @@ public class AddressEntity {
         return BasePath;
     }
 
-    public static void setBasePath(String basePath) {
-        BasePath = basePath;
+    public static String setBasePath(String basePath) {
+        return BasePath = basePath;
     }
 }

@@ -3,140 +3,115 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.*;
 
 import static io.restassured.RestAssured.given;
+import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-@RunWith(JUnitPlatform.class)
 public class ApiTests_ImageService extends BaseTestAPI {
 
-    public ApiTests_ImageService() {
-        setBaseURI();;
-        setBasePath();
-    }
+    String path = "/imageservicems/deutsche/imageservice";
 
     @Test
-    @Description("Método  para upload de arquivo")
-    @DisplayName("Realizar upload de arquivo de imagen valido JPG")
-    public void imageService_upload_validFile_JPG(){
+    public void post_ImageService_UploadDeArquivoJPG(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
                 .multiPart("file", fileToUpload("spartanskull02.jpg"))
                 .when()
-                .post("/upload")
+                .post(path + "/upload")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body(containsString("File Uploaded Success"))
         ;
     }
 
     @Test
-    @Description("Método  para upload de arquivo")
-    @DisplayName("Realizar upload de arquivo de imagen valido PNG")
-    public void imageService_upload_validFile_PNG(){
+    public void post_ImageService_UpLoadDeArquivoPNG(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
                 .multiPart("file", fileToUpload("spartanskull03.png"))
                 .when()
-                .post("/upload")
+                .post(path + "/upload")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body(containsString("File Uploaded Success"))
         ;
     }
 
     @Test
-    @Description("Método  para upload de arquivo")
-    @DisplayName("Realizar upload de arquivo de imagen valido JPEG")
-    public void imageService_upload_validFile_JPEG(){
+    public void post_ImageService_UploadDeArquivoJPEG(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
                 .multiPart("file", fileToUpload("regua.jpeg"))
                 .when()
-                .post("/upload")
+                .post(path + "/upload")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body(containsString("File Uploaded Success"))
         ;
     }
 
     @Test
-    @Description("Método  para upload de arquivo")
-    @DisplayName("Realizar upload de arquivo de imagen valido TIFF maior que o especificado")
-    public void imageService_upload_validFile_TIFF_greaterThanSpecified(){
+    public void post_ImageService_UploadDeArquivoTIFFMaiorQueOEspecificado(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
                 .multiPart("file", fileToUpload("spartanskull04.tiff"))
                 .when()
-                .post("/upload")
+                .post(path + "/upload")
                 .then()
-                .log().all()
                 .statusCode(500)
-                .body(containsString("The maximum size was exceeded"))
         ;
     }
 
+    @Ignore
     @Test
-    @Description("Método  para upload de arquivo")
-    @DisplayName("Realizar upload de arquivo de imagen valido BMP maior que o especificado")
-    public void imageService_upload_validFile_BMP_greaterThanSpecified(){
+    public void post_ImageService_UploadDeArquivoBMPMaiorQueOEspecificado(){
         given()
                 .contentType("multipart/form-data")
                 .multiPart("brandId", 17)
                 .multiPart("file", fileToUpload("spartanskull05.bmp"))
                 .when()
-                .post("/upload")
+                .post(path + "/upload")
                 .then()
-                .log().all()
                 .statusCode(500)
-                .body(containsString("The maximum size was exceeded"))
         ;
     }
 
 
     @Test
-    @Description("Método  para download de arquivo")
-    @DisplayName("Realizar download do arquivo de imagen - JPG")
-    public void imageService_Download_validFile_JPG(){
+    public void get_ImageService_DownloadDeArquivoJPG(){
         uploadImage("spartanskull02.jpg", 17);
-
         byte[] file = given()
+                .pathParam("brandId", 17)
+                .pathParam("image", "spartanskull02.jpg")
                 .when()
-                .log().all()
-                .get("/download/17/spartanskull02.jpg")
+                .get(path + "/download/{brandId}/{image}")
                 .then()
                 .statusCode(200)
                 .extract().asByteArray();
         downloadLocally(file, ".jpg");
         assertTrue(file.length > 0);
-        assertThat(file, notNullValue());
+        assertNotNull(file);
    }
 
     @Test
-    @Description("Método  para download de arquivo")
-    @DisplayName("Realizar download do arquivo de imagen - JPEG")
-    public void imageService_Download_validFile_JPEG(){
+    public void get_ImageService_DownloadDeArquivoJPEG(){
         byte[] file = given()
+                .pathParam("brandId", 17)
+                .pathParam("imageName", "regua.jpeg")
                 .when()
-                .log().all()
-                .get("/download/17/regua.jpeg")
+                .get(path + "/download/{brandId}/{imageName}")
                 .then()
                 .statusCode(200)
                 .extract().asByteArray();
@@ -146,13 +121,12 @@ public class ApiTests_ImageService extends BaseTestAPI {
     }
 
     @Test
-    @Description("Método  para download de arquivo")
-    @DisplayName("Realizar download do arquivo de imagen - PNG")
-    public void imageService_Download_validFile_PNG(){
+    public void get_ImageService_DownloadDeArquivoPNG(){
         byte[] file = given()
+                .pathParam("brandId", 17)
+                .pathParam("imageName", "spartanskull03.png")
                 .when()
-                .log().all()
-                .get("/download/17/spartanskull03.png")
+                .get(path + "/download/{brandId}/{imageName}")
                 .then()
                 .statusCode(200)
                 .extract().asByteArray();
@@ -162,30 +136,29 @@ public class ApiTests_ImageService extends BaseTestAPI {
     }
 
     @Test
-    @Description("Método  para download de arquivo")
-    @DisplayName("Realizar download do arquivo de imagen inexistente - TIFF")
-    public void imageService_Download_validFile_TIFF_Invalid(){
+    public void get_ImageService_DownloadDeArquivoInexistente(){
         given()
+                .pathParam("brandId", 17)
+                .pathParam("imageName", "spartanskull04.tiff")
                 .when()
-                .log().all()
-                .get("/download/17/spartanskull04.tiff")
+                .get(path + "/download/{brandId}/{imageName}")
                 .then()
                 .statusCode(500)
-                .body(containsString("Inexistent file"))
+                .body(containsString("The specified key does not exist."))
         ;
     }
 
     @Test
-    @Description("Método  para download de arquivo")
-    @DisplayName("Realizar download do arquivo de imagen inexistente - BMP")
-    public void imageService_Download_validFile_BMP_Invalid(){
+    public void imageService_DownloadDeArquivoBMPInexistente(){
         given()
+                .contentType(JSON)
+                .pathParam("brandId", 17)
+                .pathParam("fileName", "spartanskull05.bmp")
                 .when()
-                .log().all()
-                .get("/download/17/spartanskull05.bmp")
+                .get(path + "/download/{brandId}/{fileName}")
                 .then()
                 .statusCode(500)
-                .body(containsString("Inexistent file"))
+                .body(containsString("The specified key does not exist."))
         ;
     }
 
@@ -202,20 +175,12 @@ public class ApiTests_ImageService extends BaseTestAPI {
                 .multiPart("brandId", brandId)
                 .multiPart("file", fileToUpload(imageName))
                 .when()
-                .post("/upload")
+                .post(path + "/upload")
                 .then()
                 .log().all()
                 .statusCode(200)
                 .body(containsString("File Uploaded Success"))
         ;
-    }
-
-    private void setBaseURI(){
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
-    }
-
-    private void setBasePath(){
-        AddressEntity.setBasePath("/imageservicems/deutsche/imageservice");
     }
 
 }

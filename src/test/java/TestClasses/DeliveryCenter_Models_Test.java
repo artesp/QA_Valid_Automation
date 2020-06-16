@@ -5,9 +5,7 @@ import Assistant.UrlSystemAssistant;
 import Core.BaseTest;
 import DeliveryCenter_Pages.Menu_Page;
 import DeliveryCenter_Pages.Models_Page;
-import io.qameta.allure.Description;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class DeliveryCenter_Models_Test extends BaseTest {
 
@@ -21,9 +19,7 @@ public class DeliveryCenter_Models_Test extends BaseTest {
     }
 
     @Test
-    @Description("Check the creating email template")
-    @DisplayName("DC-54: Create email template")
-    public void createEmailTemplate(){
+    public void DC54_CreateEmailTemplate(){
         page.enterInDataPortal();
         menuPage.clickInMainMenuTogglebutton();
         menuPage.selectCriacaoConteudo();
@@ -31,15 +27,13 @@ public class DeliveryCenter_Models_Test extends BaseTest {
     }
 
     @Test
-    @Description("Check the required fields")
-    @DisplayName("DC-55: Verify the required fields - Models - Email")
-    public void verifyTheRequiredFields_Email(){
+    public void DC55_VerifyTheRequiredFields_Models_Email(){
 
     }
 
 
     private void setUrl() {
-        AddressEntity.setURL(UrlSystemAssistant.URL_DEV_DATAPORTAL);
+        new AddressEntity().setURL(UrlSystemAssistant.URL_DEV_DATAPORTAL);
     }
 
 }

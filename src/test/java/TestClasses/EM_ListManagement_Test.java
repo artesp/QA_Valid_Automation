@@ -7,10 +7,7 @@ import Assistant.UrlSystemAssistant;
 import Core.BaseTest;
 import EM_Pages.ListManagement_Page;
 import EM_Pages.Login_Page;
-import io.qameta.allure.Description;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.openqa.selenium.By;
 
 import static org.junit.Assert.*;
@@ -26,9 +23,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("Validate list upload functionality")
-    @DisplayName("EM-14: Check List Upload - List Management")
-    public void EM_14_Check_list_upload(){
+    public void EM14_Check_list_upload(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -44,9 +39,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("The system should not allow duplicate names")
-    @DisplayName("EM-15: Validate insertion of list with duplicate name")
-    public void EM_15_Validate_duplicate_name_list_Insertion(){
+    public void EM15_Validate_duplicate_name_list_Insertion(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -65,9 +58,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("Check the layout of screen elements with system language other than the default")
-    @DisplayName("EM-22: Check layout with selected Portuguese language.")
-    public void EM_22_Check_layout_Portuguese_Language(){
+    public void EM22_Check_layout_Portuguese_Language(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -77,9 +68,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("The List Name and Description fields should be required.")
-    @DisplayName("EM-24 : Check Required New List Name and Description Fields")
-    public void EM_24_Required_Fields_Name(){
+    public void EM24_Required_Fields_Name(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -93,9 +82,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("The List Name and Description fields should be required.")
-    @DisplayName("EM-24 : Check Required New List Name and Description Fields")
-    public void EM_24_Required_Fields_Description(){
+    public void EM24_Required_Fields_Description(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -109,9 +96,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("Check system behavior with files containing multiple records.")
-    @DisplayName("EM-25 : Check file upload with more than 3 records ")
-    public void EM_25_Upload_file_with_more_3_records(){
+    public void EM25_Upload_file_with_more_3_records(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -127,9 +112,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("Verify system behavior with inválid file upload")
-    @DisplayName("EM-27 : Verify File Upload without Variables and Records.")
-    public void EM_27_Upload_file_with_no_records(){
+    public void EM27_Upload_file_with_no_records(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -145,9 +128,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     @Test
-    @Description("Verify system behavior with file that contains comma in records")
-    @DisplayName("EM-23 : Upload file that contains comma in your records")
-    public void EM_23_Upload_file_with_comma(){
+    public void EM23_Upload_file_with_comma(){
         accessSystem();
         page.clickButtonMenu_ListManagement();
         page.clickButtonLoadList_ListManagement();
@@ -186,7 +167,7 @@ public class EM_ListManagement_Test extends BaseTest {
     }
 
     private void setUrl() {
-        AddressEntity.setURL(UrlSystemAssistant.URL_HOM_EM);
+        new AddressEntity().setURL(UrlSystemAssistant.URL_HOM_EM);
     }
 
     private void accessSystem(){

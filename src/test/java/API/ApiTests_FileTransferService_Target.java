@@ -3,54 +3,44 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
-import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(JUnitPlatform.class)
+
 public class ApiTests_FileTransferService_Target extends BaseTestAPI {
 
     private int idTarget;
+    String path = "filetransferms/deutsche";
 
-    public ApiTests_FileTransferService_Target() {
-        setBaseURI();
-        setBasePath();
-    }
-
-    @BeforeEach
+    @Before
     public void each(){
         idTarget = genarateTargetForTest();
     }
 
-    @AfterEach
+    @After
     public void clearClenup(){
         clearBase(idTarget);
     }
 
     @Test
-    @Description("Get - Listar todos os targets configurados")
-    @DisplayName("Listar todos os targets configurados")
-    public void get_FileTransferTarget_listTargets(){
+    public void get_FileTransferTarget_ListarTargets(){
         given()
                 .when()
-                .get("/target")
+                .get(path + "/target")
                 .then()
                 .statusCode(200)
                 .body("content.id", hasItem(idTarget))
@@ -58,13 +48,11 @@ public class ApiTests_FileTransferService_Target extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Consultar target por id")
-    @DisplayName("Consultar target por id")
-    public void get_FileTransferTarget_searchById(){
+    public void get_FileTransferTarget_ConsultarTargetPorId(){
         given()
                 .when()
                 .pathParam("id", idTarget )
-                .get("/target/{id}")
+                .get(path + "/target/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idTarget))
@@ -77,18 +65,14 @@ public class ApiTests_FileTransferService_Target extends BaseTestAPI {
     }
 
     @Test
-    @Description("Post - Criar target")
-    @DisplayName("Criar target")
-    public void post_FileTransferTarget_createTarget(){
+    public void post_FileTransferTarget_CriarTargetComSucesso(){
         assertTrue(idTarget != 0);
         assertTrue(idTarget > 0);
         assertNotNull(idTarget);
     }
 
     @Test
-    @Description("Put - Alterar target")
-    @DisplayName("Alterar target")
-    public void put_FileTransferTarget_updateTarget(){
+    public void put_FileTransferTarget_AlterarTarget(){
         given()
                 .when()
                 .contentType(JSON)
@@ -100,10 +84,8 @@ public class ApiTests_FileTransferService_Target extends BaseTestAPI {
                         3,
                         "/home/rafael",
                         "rafael"))
-                .log().all()
-                .put("/target/{id}")
+                .put(path + "/target/{id}")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body("id", is(idTarget))
                 .body("protocol", is("FTP"))
@@ -125,9 +107,8 @@ public class ApiTests_FileTransferService_Target extends BaseTestAPI {
                         "/tmp",
                         "rafael.dsilva"))
                 .when()
-                .post("/target")
+                .post(path + "/target")
                 .then()
-                .log().all()
                 .statusCode(200)
                 .body("protocol", is("SSH"))
                 .body("name", is("repoTeste"))
@@ -140,16 +121,16 @@ public class ApiTests_FileTransferService_Target extends BaseTestAPI {
     }
 
     private void clearBase(int id){
-//        try {
-//            sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         given()
                 .contentType(JSON)
                 .pathParam("id", id)
                 .when()
-                .delete("target/{id}")
+                .delete(path + "/target/{id}")
                 .then()
                 .statusCode(200)
         ;
@@ -167,11 +148,4 @@ public class ApiTests_FileTransferService_Target extends BaseTestAPI {
         return param;
     }
 
-    private void setBaseURI() {
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
-    }
-
-    private void setBasePath(){
-        AddressEntity.setBasePath("filetransferms/deutsche");
-    }
 }

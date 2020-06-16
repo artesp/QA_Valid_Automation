@@ -3,59 +3,49 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(JUnitPlatform.class)
+
 public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
 
     private int idProduct;
     private int idPrintState;
-    public ApiTests_CampaignService_PrintState() {
-        setBaseURI();
-        setBasePath();
-    }
+    String path = "campaignservicems/deutsche/";
 
-    @BeforeEach
+    @Before
     public void each(){
         idPrintState = generatePrintStateForTest();
     }
 
-    @AfterEach
+    @After
     public void clearClenup(){
         clearBase(idPrintState);
     }
 
 
     @Test
-    @Description("Post - Cria um item na Print-State")
-    @DisplayName("Criar registro na tabela Print-State")
-    public void post_PrintState_Create(){
+    public void post_PrintState_CriarRegistroComSucesso(){
         assertTrue(idPrintState > 0);
         assertNotNull(idPrintState);
     }
 
     @Test
-    @Description("Put - Alterar um item na Print-State")
-    @DisplayName("Alterar registro na tabela Print-State")
-    public void put_PrintState_Update(){
+    public void put_PrintState_AlterarRegistro(){
         assertTrue(idPrintState > 0);
         assertNotNull(idPrintState);
         given()
@@ -65,7 +55,7 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
                         "2020-05-22 00:00:00", idProduct, 2))
                 .when()
                 .pathParam("id", idPrintState)
-                .put("print-state/{id}")
+                .put(path + "print-state/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idPrintState))
@@ -83,15 +73,13 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Listar os itens Print-State")
-    @DisplayName("Listar registros da tabela Print-State")
-    public void get_PrintState_ReadList(){
+    public void get_PrintState_ListarRegistros(){
         assertTrue(idPrintState > 0);
         assertNotNull(idPrintState);
         given()
                 .contentType(JSON)
                 .when()
-                .get("print-state")
+                .get(path + "print-state")
                 .then()
                 .statusCode(200)
                 .body("content.id", contains(idPrintState))
@@ -99,16 +87,14 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Consultar os itens Print-State por Id")
-    @DisplayName("Consultar registros da tabela Print-State por Id")
-    public void get_PrintState_ReadItenById(){
+    public void get_PrintState_ConsultarRegistroPorId(){
         assertTrue(idPrintState > 0);
         assertNotNull(idPrintState);
         given()
                 .contentType(JSON)
                 .pathParam("id", idPrintState)
                 .when()
-                .get("print-state/{id}")
+                .get(path + "print-state/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idPrintState))
@@ -117,35 +103,29 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Consultar os itens Print-State por Id inexistente")
-    @DisplayName("Consultar registros da tabela Print-State por Id inexistente")
-    public void get_PrintState_ReadItenByInexistentId(){
+    public void get_PrintState_ConsultarRegistroPorIdInexistente(){
         given()
                 .contentType(JSON)
                 .when()
-                .get("print-state/999999")
+                .get(path + "print-state/999999")
                 .then()
                 .statusCode(404)
         ;
     }
 
     @Test
-    @Description("Delete - Deletar iten Print-State")
-    @DisplayName("Delete registros da tabela Print-State")
-    public void delete_PrintState_ItemById(){
+    public void delete_PrintState_DeletarRegistro(){
         assertTrue(idPrintState > 0);
         assertNotNull(idPrintState);
         /*Método de exclusão é chamado e validado no métudo @AfterEach*/
     }
 
     @Test
-    @Description("Delete - Deletar iten Print-State - Id inexistente")
-    @DisplayName("Delete registros da tabela Print-State com id inexistente")
-    public void delete_PrintState_IdNoExists(){
+    public void delete_PrintState_DeletarRegistroPorIdInexistente(){
         given()
                 .contentType(JSON)
                 .when()
-                .delete("print-state/999999")
+                .delete(path + "print-state/999999")
                 .then()
                 .statusCode(404)
         ;
@@ -161,7 +141,7 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
                         "2020-05-19 00:00:00", "2", "inputFileTeste", "2020-05-19 00:00:00",
                         "2020-05-19 00:00:00", idProduct, 3))
                 .when()
-                .post("print-state")
+                .post(path + "print-state")
                 .then()
                 .statusCode(201)
                 .body("cifDate", is("2020-05-19 00:00:00"))
@@ -185,11 +165,16 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
     }
 
     private void deletePrintStateForTest(int id){
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         given()
                 .contentType(JSON)
                 .pathParam("id", id)
                 .when()
-                .delete("print-state/{id}")
+                .delete(path + "print-state/{id}")
                 .then()
                 .statusCode(204);
     }
@@ -213,21 +198,6 @@ public class ApiTests_CampaignService_PrintState extends BaseTestAPI {
         parameters.put("totalDoc", 0);
         parameters.put("totalPage", 0);
         return parameters;
-    }
-
-    /*@Test
-    @Description("")
-    @DisplayName("")
-    public void test(){
-
-    }*/
-
-    private void setBaseURI() {
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
-    }
-
-    public void setBasePath(){
-        AddressEntity.setBasePath("campaignservicems/deutsche/");
     }
 
 }

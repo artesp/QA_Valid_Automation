@@ -1,39 +1,27 @@
 package API;
 
 import Assistant.AddressEntity;
+import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.Before;
+import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 
-@RunWith(JUnitPlatform.class)
 public class ApiTests_CampaignService_FailEmailState extends BaseTestAPI {
 
-    public ApiTests_CampaignService_FailEmailState() {
-        setBasePath();
-    }
+    String path = "campaignservicems/deutsche";
 
     @Test
-    @Description("Retorna lista com as falhas de entrega")
-    @DisplayName("Listar Falhas de Entrega")
-    public void listFailEmailState(){
+    public void get_FailEmailState_ListarFalhasDeEntrega(){
         given()
                 .when()
-                .get()
+                .get(path + "/failemailstate")
                 .then()
                 .statusCode(200)
                 .body("content", hasSize(greaterThan(0)))
         ;
-    }
-
-
-    public void setBasePath(){
-        AddressEntity.setBasePath("campaignservicems/deutsche/failemailstate");
     }
 }

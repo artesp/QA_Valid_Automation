@@ -3,15 +3,11 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,17 +21,12 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(JUnitPlatform.class)
 public class ApiTests_FileTransferService_File extends BaseTestAPI {
 
     private int idFile;
+    String path = "filetransferms/deutsche";
 
-    public ApiTests_FileTransferService_File() {
-        setBaseURI();
-        setBasePath();
-    }
-
-    @BeforeEach
+    @Before
     public void each(){
         idFile = uploadFileToTest(
                 2,
@@ -44,18 +35,16 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
                 "DEUTSCHE_INCLUSAO_EMAIL_20200529_155700_002.zip");
     }
 
-    @AfterEach
+    @After
     public void clearClenup(){
         clearFiles(idFile);
     }
 
     @Test
-    @Description("Get - Lista todas arquivos transferidos")
-    @DisplayName("Retornar todos os arquivos transferidos")
-    public void get_FileTransfer_List(){
+    public void get_FileTransfer_ListarTodosOsArquivos(){
         given()
                 .when()
-                .get("/file")
+                .get(path + "/file")
                 .then()
                 .statusCode(200)
                 .body("content", hasSize(greaterThan(0)))
@@ -64,13 +53,11 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Retorna detalhes de um arquivo transferido por id existente")
-    @DisplayName("Retornar arquivos transferidos por Id")
-    public void get_FileTransfer_WithAnExistingId(){
+    public void get_FileTransfer_ConsultarArquivosPorId(){
         given()
                 .pathParam("id", idFile)
                 .when()
-                .get("/file/{id}")
+                .get(path + "/file/{id}")
                 .then()
                 .statusCode(200)
                 .body("name", is("DEUTSCHE_INCLUSAO_EMAIL_20200529_155700_002.zip"))
@@ -80,12 +67,10 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get- Retorna detalhes de um arquivo transferido por id inexistente")
-    @DisplayName("Verificar retorno com id inexistente.")
-    public void get_FileTransfer_WithAnNotExistingId(){
+    public void get_FileTransfer_ConsultarArquivoComIdInexistente(){
         given()
                 .when()
-                .get("/file/9999")
+                .get(path + "/file/9999")
                 .then()
                 .statusCode(500)
                 .body("message", equalTo("no value present"))
@@ -93,12 +78,10 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Retorna detalhes de um arquivo transferido por id existente")
-    @DisplayName("Informar uma String no parametro Id")
-    public void get_FileTransfer_WithStringOnId(){
+    public void get_FileTransfer_ConsutarArquivoInformandoIdInvalido(){
         given()
                 .when()
-                .get("/file/teste")
+                .get(path + "/file/teste")
                 .then()
                 .statusCode(500)
                 .body("error", is("Internal Server Error"))
@@ -107,17 +90,13 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Post - Realiza upload do arquivo")
-    @DisplayName("Upload de arquivo informando BrandId")
-    public void post_FileTransfer_CreateFileTransferWithBrandID(){
+    public void post_FileTransfer_CriarArquivoComBrandId(){
         assertTrue(idFile > 0);
         assertNotNull(idFile);
     }
 
     @Test
-    @Description("Post - Realiza o upload do arquivo")
-    @DisplayName("Upload de arquivo sem informar a BrandId")
-    public void post_FileTransfer_CreateFileTransferWithoudBrandID(){
+    public void post_FileTransfer_CriarArquivoSemBrandId(){
         clearFiles(idFile);
         idFile = uploadFileToTest(
                 2,
@@ -128,9 +107,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Put - Realiza o alteração do arquivo")
-    @DisplayName("Alterar arquivo com BrandId")
-    public void put_FileTransfer_UpdateWithBrandId(){
+    public void put_FileTransfer_AlterarArquivoComBrandId(){
         given()
                 .when()
                 .contentType(JSON)
@@ -140,7 +117,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
                         "2020-06-08",
                         "ArquivoAlterado",
                         10))
-                .put("/file/{id}")
+                .put(path + "/file/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idFile))
@@ -153,9 +130,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Put - Realiza o alteração do arquivo")
-    @DisplayName("Alterar arquivo sem BrandId")
-    public void put_FileTransfer_UpdateWithoudBrandId(){
+    public void put_FileTransfer_AlterarArquivoSemBrandId(){
         clearFiles(idFile);
         idFile = uploadFileToTest(
                 2,
@@ -169,7 +144,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
                         "2020-06-08",
                         "ArquivoAlterado",
                         10))
-                .put("/file/{id}")
+                .put(path + "/file/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idFile))
@@ -181,9 +156,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Post - Realiza upload do arquivo")
-    @DisplayName("Upload de arquivo .7z")
-    public void post_FileTransfer_CreateFileZevenZip(){
+    public void post_FileTransfer_UploadDeArquivoSevenZip(){
         clearFiles(idFile);
         idFile = uploadFileToTest(
                 2,
@@ -193,7 +166,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
         given()
                 .pathParam("id", idFile)
                 .when()
-                .get("/file/{id}")
+                .get(path + "/file/{id}")
                 .then()
                 .body("fileType", is("SEVEN_ZIP"))
                 .body("name", is("DEUTSCHE_BOLETOS_20200.7z"))
@@ -201,9 +174,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Post - Realiza upload do arquivo")
-    @DisplayName("Upload de arquivo PDF")
-    public void post_FileTransfer_CreateFilePDF(){
+    public void post_FileTransfer_UploadDeArquivoPDF(){
         clearFiles(idFile);
         idFile = uploadFileToTest(
                 2,
@@ -213,7 +184,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
         given()
                 .pathParam("id", idFile)
                 .when()
-                .get("/file/{id}")
+                .get(path + "/file/{id}")
                 .then()
                 .body("fileType", is("PDF"))
                 .body("name", is("DEUTSCHE_BOLETOS_20200103_002.pdf"))
@@ -221,9 +192,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
     }
 
     @Test
-    @Description("Post - Realiza upload do arquivo")
-    @DisplayName("Upload de arquivo RET")
-    public void post_FileTransfer_CreateFileRET(){
+    public void post_FileTransfer_UploadDeArquivoRET(){
         clearFiles(idFile);
         idFile = uploadFileToTest(
                 2,
@@ -233,7 +202,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
         given()
                 .pathParam("id", idFile)
                 .when()
-                .get("/file/{id}")
+                .get(path + "/file/{id}")
                 .then()
                 .body("fileType", is("RET"))
                 .body("name", is("gra0402202001.RET"))
@@ -252,7 +221,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
                 .multiPart("file", fileToUpload(fileName))
                 .multiPart("targetId", targetId)
                 .when()
-                .post("/file")
+                .post(path + "/file")
                 .then()
                 .statusCode(201)
                 .body("application", is("MAILING"))
@@ -271,7 +240,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
                 .multiPart("file", fileToUpload(fileName))
                 .multiPart("targetId", targetId)
                 .when()
-                .post("/file")
+                .post(path + "/file")
                 .then()
                 .statusCode(201)
                 .body("application", is("MAILING"))
@@ -306,7 +275,7 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
         ArrayList<String> response =
                 given()
                         .when()
-                        .get("/file")
+                        .get(path + "/file")
                         .then()
                         .log().all()
                         .statusCode(200)
@@ -324,23 +293,13 @@ public class ApiTests_FileTransferService_File extends BaseTestAPI {
                 .contentType(JSON)
                 .pathParam("id", id)
                 .when()
-                .delete("file/{id}")
+                .delete(path + "/file/{id}")
                 .then()
                 .statusCode(204);
     }
 
-
-
     private File fileToUpload(String fileName){
         return new File("FilesToTransfer/"+fileName);
-    }
-
-    private void setBaseURI() {
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
-    }
-
-    private void setBasePath(){
-        AddressEntity.setBasePath("filetransferms/deutsche");
     }
 
 }

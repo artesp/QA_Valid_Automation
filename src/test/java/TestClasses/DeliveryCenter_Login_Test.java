@@ -12,6 +12,6 @@ public class DeliveryCenter_Login_Test extends BaseTest {
 
 
     private void setUrl() {
-        AddressEntity.setURL(UrlSystemAssistant.URL_DEV_DATAPORTAL);
+        new AddressEntity().setURL(UrlSystemAssistant.URL_DEV_DATAPORTAL);
     }
 }

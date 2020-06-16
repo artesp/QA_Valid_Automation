@@ -3,59 +3,47 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
+import static java.lang.Thread.sleep;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
-@RunWith(JUnitPlatform.class)
 public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
 
     private int idProduct;
     private int idPrint;
+    String path = "campaignservicems/deutsche/";
 
-    public ApiTests_CampaignService_PrintAnalytic() {
-        setBasePath();
-        setBaseURI();
-    }
-
-    @BeforeEach
+    @Before
     public void each(){
         idPrint = generatePrintAnalyticForTest();
     }
 
-    @AfterEach
+    @After
     public void clearClenup(){
         clearBase(idPrint);
     }
 
 
     @Test
-    @Description("Post - Criar item para Print - Analytic")
-    @DisplayName("Criar registro na tabela Print - Analytic")
-    public void post_PrintAnalytic_Create(){
+    public void post_PrintAnalytic_CriarRegistroNaTabela(){
         assertTrue(idPrint > 0);
         assertNotNull(idPrint);
     }
 
     @Test
-    @Description("Put - Alterar um item na Print-Analytic")
-    @DisplayName("Alterar registro na tabela Print-Analytic")
-    public void put_PrintAnalytic_Update(){
+    public void put_PrintAnalytic_AlterarRegistroNaTabela(){
         assertTrue(idPrint > 0);
         assertNotNull(idPrint);
         given()
@@ -65,7 +53,7 @@ public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
                         "2020-05-27 00:00:00", idProduct, 1, 3, 1))
                 .when()
                 .pathParam("id", idPrint)
-                .put("print/{id}")
+                .put(path + "print/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idPrint))
@@ -85,15 +73,13 @@ public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Listar os itens Print-Analytic")
-    @DisplayName("Listar registros da tabela Print-Analytic")
-    public void get_PrintAnalytic_ReadList(){
+    public void get_PrintAnalytic_ListarRegistrosDaTabela(){
         assertTrue(idPrint > 0);
         assertNotNull(idPrint);
         given()
                 .contentType(JSON)
                 .when()
-                .get("print")
+                .get(path + "print")
                 .then()
                 .statusCode(200)
                 .body("content.id", contains(idPrint))
@@ -101,16 +87,14 @@ public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Consultar os itens Print-Analytic por Id")
-    @DisplayName("Consultar registros da tabela Print-Analytic por Id")
-    public void get_PrintAnalytic_ReadItenById(){
+    public void get_PrintAnalytic_ConsultarRegistroPorId(){
         assertTrue(idPrint > 0);
         assertNotNull(idPrint);
         given()
                 .contentType(JSON)
                 .pathParam("id", idPrint)
                 .when()
-                .get("print/{id}")
+                .get(path + "print/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idPrint))
@@ -120,35 +104,29 @@ public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Consultar os itens Print-State por Id inexistente")
-    @DisplayName("Consultar registros da tabela Print-State por Id inexistente")
-    public void get_PrintAnalytic_ReadItenByInexistentId(){
+    public void get_PrintAnalytic_ConsultarRegistrosPorIdInexistente(){
         given()
                 .contentType(JSON)
                 .when()
-                .get("print/999999")
+                .get(path + "print/999999")
                 .then()
                 .statusCode(404)
         ;
     }
 
     @Test
-    @Description("Delete - Deletar iten Print-Analytic")
-    @DisplayName("Delete registros da tabela Print-Analytic")
-    public void delete_PrintAnalytic_ItemById(){
+    public void delete_PrintAnalytic_DeletarRegistros(){
         assertTrue(idPrint > 0);
         assertNotNull(idPrint);
         /*Método de exclusão é chamado e validado no métudo @AfterEach*/
     }
 
     @Test
-    @Description("Delete - Deletar iten Print-Analytic - Id inexistente")
-    @DisplayName("Delete registros da tabela Print-Analytic com id inexistente")
-    public void delete_PrintAnalytic_IdNoExists(){
+    public void delete_PrintAnalytic_DeletarRegistroIdInexistente(){
         given()
                 .contentType(JSON)
                 .when()
-                .delete("print/999999")
+                .delete(path + "print/999999")
                 .then()
                 .statusCode(404)
         ;
@@ -164,7 +142,7 @@ public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
                         "John Wick", "outputFileTeste", 1, "2020-05-26 00:00:00",
                         "2020-05-26 00:00:00", idProduct, 1, 3, 1))
                 .when()
-                .post("print")
+                .post(path + "print")
                 .then()
                 .statusCode(201)
                 .body("address", is("Hotel Continental"))
@@ -216,27 +194,18 @@ public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
     }
 
     private void deletePrintForTest(int id){
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         given()
                 .contentType(JSON)
                 .pathParam("id", id)
                 .when()
-                .delete("print/{id}")
+                .delete(path + "print/{id}")
                 .then()
                 .statusCode(204);
     }
 
-    private void setBaseURI() {
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
-    }
-
-    public void setBasePath(){
-        AddressEntity.setBasePath("campaignservicems/deutsche/");
-    }
-
-     /*@Test
-    @Description("")
-    @DisplayName("")
-    public void test(){
-
-    }*/
 }

@@ -4,13 +4,11 @@ import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTest;
 import EM_Pages.Login_Page;
-import io.qameta.allure.Description;
 import org.hamcrest.CoreMatchers;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 public class EM_Login_Test extends BaseTest {
 
@@ -22,8 +20,6 @@ public class EM_Login_Test extends BaseTest {
     }
 
     @Test
-    @Description()
-    @DisplayName("Access system with success")
     public void login_Success(){
         page.typeUser_Login();
         page.typePassword_Login();
@@ -32,10 +28,10 @@ public class EM_Login_Test extends BaseTest {
         page.checkBox_Login();
         page.clickButton_Login();
         String expected = page.getTextOfElement_Login();
-        assertThat(expected, CoreMatchers.containsString("Bem-vindo,"));
+        assertEquals(expected, CoreMatchers.containsString("Bem-vindo,"));
     }
 
     private void setUrl() {
-        AddressEntity.setURL(UrlSystemAssistant.URL_PROD_EM);
+        new AddressEntity().setURL(UrlSystemAssistant.URL_PROD_EM);
     }
 }

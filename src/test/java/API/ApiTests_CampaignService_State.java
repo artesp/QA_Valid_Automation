@@ -3,48 +3,26 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
-import io.restassured.http.ContentType;
-import io.restassured.mapper.ObjectMapper;
-import io.restassured.mapper.ObjectMapperDeserializationContext;
-import io.restassured.mapper.ObjectMapperSerializationContext;
-import org.junit.Assert;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-
-import static com.sun.corba.se.impl.util.Version.asString;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-@RunWith(JUnitPlatform.class)
 public class ApiTests_CampaignService_State extends BaseTestAPI {
 
-
-    public ApiTests_CampaignService_State() {
-        setBaseURI();
-        setBasePath();
-    }
+    String path = "campaignservicems/deutsche";
 
     @Test
-    @Description("Filtrando por Produto Deutsche_Plural(ID 109) e Data 01/12/2019 até 15/01/2020")
-    @DisplayName("Filtrando Por Produto e Datas - statusCode 200")
-    public void filtrandoPorProdutoEDatas(){
+    public void get_CampaignServiceState_filtrandoPorProdutoEDatas(){
         given()
                 .param("page","0")
                 .param("campaign.brandId","17")
-                .param("productId","109")
-                .param("campaign.startDate","2019-12-01 20:00:00.00")
-                .param("campaign.startDate","2020-01-15 17:40:00.00")
+                .param("productId","94")
+                .param("campaign.startDate","2019-02-01 20:00:00.00")
+                .param("campaign.startDate","2020-06-10 17:40:00.00")
                 .when()
-                .get()
+                .get(path + "/campaignstate")
                 .then()
                 .statusCode(200)
                 .body("content", hasSize(greaterThan(0)))
@@ -54,13 +32,11 @@ public class ApiTests_CampaignService_State extends BaseTestAPI {
 
 
     @Test
-    @Description("Verificar a lista. Retorno apenas com Deutsche_Plural(ID 109)")
-    @DisplayName("Filtrando Por Produto e Datas - Deve retornar apenas 'product_id 109'")
-    public void retornoProduto109(){
+    public void get_CampaignServiceState_RetornoProduto109(){
         given()
                 .param("productId","109")
                 .when()
-                .get()
+                .get(path + "/campaignstate")
                 .then()
                 .log().all()
                 .statusCode(200)
@@ -69,14 +45,12 @@ public class ApiTests_CampaignService_State extends BaseTestAPI {
     }
 
     @Test
-    @Description("Verificar retorno com data inicial maior que a final")
-    @DisplayName("Filtrando por Data inicial maior que a final")
-    public void dataInicialMaiorQueFinal(){
+    public void get_CampaignServiceState_DataInicialMaiorQueFinal(){
         given()
                 .param("campaign.startDate","2020-01-15 00:00:00.00")
                 .param("campaign.startDate","2020-01-01 00:00:00.00")
                 .when()
-                .get()
+                .get(path + "/campaignstate")
                 .then()
                 .statusCode(200)
                 .body("content", hasSize(0))
@@ -84,42 +58,16 @@ public class ApiTests_CampaignService_State extends BaseTestAPI {
     }
 
     @Test
-    @Description("Verificar retorno com apenas uma data informada")
-    @DisplayName("Informando apenas 1 filtro de data")
-    public void naoInformarDataInicial(){
+    public void get_CampaignServiceState_NaoInformarDataInicial(){
         given()
                 .param("campaign.brandId","17")
 //                .param("campaign.startDate", "")
-                .param("campaign.startDate","2020-01-03 00:00:00.00")
+                .param("campaign.startDate","2019-01-03 00:00:00.00")
                 .when()
-                .get()
+                .get(path + "/campaignstate")
                 .then()
-//                .log().all()
                 .statusCode(200)
-                .body("content", hasSize(greaterThan(0)))
-                .body("sentDate.findAll{it.starsWith('2020-01-04')}", hasSize(0))
-                .body("sentDate.findAll{it.starsWith('2020-01-02')}", hasSize(0))
+                .body("empty",is(true))
         ;
-    }
-
-
-
-
-
-    /*  @Test
-        @Description("")
-        @DisplayName("")
-        public void test(){
-
-        }
-    */
-
-
-    private void setBaseURI() {
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
-    }
-
-    public void setBasePath(){
-        AddressEntity.setBasePath("campaignservicems/deutsche/campaignstate");
     }
 }

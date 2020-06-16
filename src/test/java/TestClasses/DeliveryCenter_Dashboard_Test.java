@@ -5,9 +5,8 @@ import Assistant.ConstantsAssistant;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTest;
 import DeliveryCenter_Pages.Dashboard_Page;
-import io.qameta.allure.Description;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import org.junit.jupiter.api.DynamicTest;
 
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -23,9 +22,7 @@ public class DeliveryCenter_Dashboard_Test extends BaseTest {
     }
 
     @Test
-    @Description("Validate the elements displaying on Dashboard page")
-    @DisplayName("DC-28: Verify details of Processed, Sent and Delivered charts")
-    public void dashboardVerifyProcessedSentAndDeliveredAndButtons(){
+    public void DC_28_VerifyDetailsOfProcessedentAndDeliveredCharts(){
         page.enterInThePortal();
         assertThat(page.dashboardChartsExistsByText_Dashboard("Processados"), containsString("Processados"));
         assertThat(page.dashboardChartsExistsByText_Dashboard("Enviados"), containsString("Enviados"));
@@ -35,9 +32,7 @@ public class DeliveryCenter_Dashboard_Test extends BaseTest {
     }
 
     @Test
-    @Description("Validate the elements displaying on the Processed details")
-    @DisplayName("DC-28: Verify details of Processed charts")
-    public void dashboardVerifyDetailsProcessed(){
+    public void DC28_VerifyDetailsOfProcessedCharts(){
         page.enterInThePortal();
 
         //Check in details of Processed
@@ -48,9 +43,7 @@ public class DeliveryCenter_Dashboard_Test extends BaseTest {
     }
 
     @Test
-    @Description("Validate the elements displaying on the Sent details")
-    @DisplayName("DC-28: Verify details of Sent charts")
-    public void dashboardVerifyDetailsSent(){
+    public void DC28_VerifyDetailsOfSentCharts(){
         page.enterInThePortal();
 
         //Check in details of Sent
@@ -61,9 +54,7 @@ public class DeliveryCenter_Dashboard_Test extends BaseTest {
     }
 
     @Test
-    @Description("Validate the elements displaying on the Delivered details")
-    @DisplayName("DC-28: Verify details of Delivered charts")
-    public void dashboardVerifyDetailsDelivered(){
+    public void DC28VerifyDetailsOfDeliveredCharts(){
         page.enterInThePortal();
 
         //Check in details of Delivered
@@ -76,7 +67,7 @@ public class DeliveryCenter_Dashboard_Test extends BaseTest {
 
 
     private void setUrl() {
-        AddressEntity.setURL(UrlSystemAssistant.URL_DEV_DATAPORTAL);
+        new AddressEntity().setURL(UrlSystemAssistant.URL_DEV_DATAPORTAL);
     }
 
 }

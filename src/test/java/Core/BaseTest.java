@@ -1,38 +1,36 @@
 package Core;
 
 import Assistant.AddressEntity;
-import Assistant.UrlSystemAssistant;
-import ReportBuilder.ReportBuilder;
 import com.itextpdf.text.DocumentException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 import java.io.FileNotFoundException;
 
-import static Core.DriverFactory.*;
+import static Core.DriverFactory.getDriver;
+import static Core.DriverFactory.killDriver;
 import static ReportBuilder.ReportBuilder.clearDirectory;
 
 public class BaseTest {
 
-    @BeforeAll
+    @BeforeClass
     public static void classInitialize() {
         clearDirectory();
     }
 
-    @BeforeEach
+    @Before
     public void testInitialize(){
-        openBrowser(AddressEntity.getURL());
+        openBrowser(new AddressEntity().getURL());
     }
 
-    @AfterEach
+    @After
     public void tearDown(){
         closeBrowser();
     }
 
-    @AfterAll
+    @AfterClass
     public static void tearDownClass() throws FileNotFoundException, DocumentException {
 //        new ReportBuilder().pdfBuilderBatch();
     }

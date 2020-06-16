@@ -3,57 +3,49 @@ package API;
 import Assistant.AddressEntity;
 import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
-import io.qameta.allure.Description;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
+import static java.lang.Thread.sleep;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(JUnitPlatform.class)
 public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
 
     private int idProduct;
-    public ApiTests_CampaignService_PrintProduct() {
-        setBasePath();
-        setBaseURI();
-    }
+    String path = "campaignservicems/deutsche/";
 
-    @BeforeEach
+    @Before
     public void each(){
         idProduct = generateProductForTest();
     }
 
-    @AfterEach
+    @After
     public void clearBase(){
         deleteProductForTest(idProduct);
     }
 
 
     @Test
-    @Description("Get - Recupera Lista de Produtos")
-    @DisplayName("Consulta de Produto na Base de Dados")
-    public void Get_Product_Print(){
+    public void Get_Product_ConsultarProduto(){
         String name = getProductPrintNameGenerated(idProduct);
         assertNotNull(idProduct);
         assertNotNull(name);
 
         given()
                 .when()
-                .get("product-print")
+                .get(path + "product-print")
                 .then()
                 .statusCode(200)
                 .body("content.name", hasItem(name))
@@ -61,9 +53,7 @@ public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
     }
 
     @Test
-    @Description("Get - Recupera Lista de Produtos por Id")
-    @DisplayName("Consulta de Produto na Base de Dados por Id")
-    public void Get_Product_Print_ById(){
+    public void Get_Product_Print_ConsultarProdutoPorId(){
         String name = getProductPrintNameGenerated(idProduct);
         assertNotNull(idProduct);
         assertNotNull(name);
@@ -72,7 +62,7 @@ public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
                 .contentType(ContentType.JSON)
                 .pathParam("id", idProduct)
                 .when()
-                .get("product-print/{id}")
+                .get(path + "product-print/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", is(idProduct))
@@ -81,30 +71,24 @@ public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
     }
 
     @Test
-    @Description("Post - Criar um item name igual a null")
-    @DisplayName("Cria Produto na Base de Dados sem informar o nome")
-    public void post_Product_Print_WithoutName(){
+    public void post_Product_Print_CriarProdutoSemNome(){
         given()
                 .contentType(ContentType.JSON)
                 .body(paramsProductPrint(null))
                 .when()
-                .post("product-print")
+                .post(path + "product-print")
                 .then()
                 .statusCode(400);
     }
 
     @Test
-    @Description("Post - Criar um item de Produto")
-    @DisplayName("Cria Produto na Base de Dados")
-    public void post_Product_Print(){
+    public void post_Product_CriarProdutoComSucesso(){
         assertTrue(idProduct > 0);
         assertNotNull(idProduct);
     }
 
     @Test
-    @Description("Put - Altera um item de Produto")
-    @DisplayName("Alterar Produto na Base de Dados")
-    public void put_Product_Print(){
+    public void put_Product_AlterarProduto(){
         String name = getProductPrintNameGenerated(idProduct);
         assertNotNull(idProduct);
         assertNotNull(name);
@@ -114,16 +98,14 @@ public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
                 .body(paramsProductPrint("NomeAlterado"))
                 .when()
                 .pathParam("id", idProduct)
-                .put("product-print/{id}")
+                .put(path + "product-print/{id}")
                 .then()
                 .statusCode(200)
         ;
     }
 
     @Test
-    @Description("Delete - Deleta um item de Produto")
-    @DisplayName("Deletar Produto na Base de Dados")
-    public void delete_Product_Print(){
+    public void delete_Product_DeletarProduto(){
         assertTrue(idProduct > 0);
         assertNotNull(idProduct);
         /*Método de deleção é chamado pelo AfterEach*/
@@ -138,7 +120,7 @@ public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
                 .contentType(ContentType.JSON)
                 .body(paramsProductPrint(name))
                 .when()
-                .post("product-print")
+                .post(path + "product-print")
                 .then()
                 .statusCode(201).extract();
         int id = JsonPath.from(response.asString()).getInt("id");
@@ -150,18 +132,23 @@ public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
                 .contentType(ContentType.JSON)
                 .pathParam("id", id)
                 .when()
-                .get("product-print/{id}")
+                .get(path + "product-print/{id}")
                 .then()
                 .statusCode(200).extract();
         return new String(JsonPath.from(response.asString()).getString("name"));
     }
 
     public void deleteProductForTest(int id){
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", id)
                 .when()
-                .delete("product-print/{id}")
+                .delete(path + "product-print/{id}")
                 .then()
                 .statusCode(204);
     }
@@ -172,19 +159,6 @@ public class ApiTests_CampaignService_PrintProduct extends BaseTestAPI {
         return parameters;
     }
 
-/*@Test
-    @Description("")
-    @DisplayName("")
-    public void test(){
 
-    }*/
-
-    private void setBaseURI() {
-        AddressEntity.setBaseURI(UrlSystemAssistant.APITEST_URI_HOMOLOG);
-    }
-
-    public void setBasePath(){
-        AddressEntity.setBasePath("campaignservicems/deutsche/");
-    }
 
 }

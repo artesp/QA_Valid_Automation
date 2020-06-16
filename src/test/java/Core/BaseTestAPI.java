@@ -2,14 +2,16 @@ package Core;
 
 import Assistant.AddressEntity;
 import Assistant.SharedMethods;
+import Assistant.UrlSystemAssistant;
+import ReportBuilder.ReportBuilder;
 import com.itextpdf.text.DocumentException;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,26 +36,25 @@ public class BaseTestAPI {
     public static String imageName;
 
 
-    @BeforeAll
+    @BeforeClass
     public static void classInitialize(){
         clearDirectory();
         clearIMGDownloadsDirectory();
     }
 
-    @BeforeEach
+    @Before
     public void testInitialize(){
-        RestAssured.baseURI= AddressEntity.getBaseURI();
-        RestAssured.basePath = AddressEntity.getBasePath();
+        RestAssured.baseURI= UrlSystemAssistant.APITEST_URI_HOMOLOG;
+        //RestAssured.basePath = AddressEntity.getBasePath();
 
         reqBuilder = new RequestSpecBuilder();
-//        reqBuilder.log(LogDetail.ALL);
         reqSpec = reqBuilder.build();
 
         RestAssured.requestSpecification = reqSpec;
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
-    @AfterAll
+    @AfterClass
     public static void classCleanup() throws FileNotFoundException, DocumentException {
 //        new ReportBuilder().pdfBuilderBatch();
     }
@@ -64,8 +65,8 @@ public class BaseTestAPI {
     }
 
     public String createNameForImageTest(){
-     imageName = "testImageAPI"+dateHours();
-     return imageName;
+        imageName = "testImageAPI"+dateHours();
+        return imageName;
     }
 
     public String createNameForVariableTest(){
@@ -95,47 +96,6 @@ public class BaseTestAPI {
 
     private String dateHours(){
         return new SharedMethods().returnDateHours();
-    }
-
-//    private File createFileCSVForTesting(){
-//
-//    }
-
-    public String barCodesToTest_MultipleNumbers(){
-       return new String ("{\n" +
-               "    \"brandId\": 17,\n" +
-               "    \"barcodes\": [\n" +
-               "        \"84660000000099200820899942389254098312620001\",\n" +
-               "        \"84660000000099200820899942389254098312620002\",\n" +
-               "        \"84660000000099200820899942389254098312620003\",\n" +
-               "        \"84660000000099200820899942389254098312620004\",\n" +
-               "        \"84660000000099200820899942389254098312620005\",\n" +
-               "        \"84660000000099200820899942389254098312620006\",\n" +
-               "        \"84660000000099200820899942389254098312620007\",\n" +
-               "        \"84660000000099200820899942389254098312620008\",\n" +
-               "        \"84660000000099200820899942389254098312620009\",\n" +
-               "        \"84660000000099200820899942389254098312620010\",\n" +
-               "        \"84660000000099200820899942389254098312620011\"\n" +
-               "    ]\n" +
-               "}").toString();
-    }
-
-    public String barCodesToTest_OnlyOneNumber(){
-        return new String("{\n" +
-                "    \"brandId\": 17,\n" +
-                "    \"barcodes\": [\n" +
-                "        \"84660000000099200820899942389254098312620001\"\n" +
-                "    ]\n" +
-                "}");
-    }
-
-    public String barCodesTotest_CustomizeANumber(String customNumber){
-        return new String("{\n" +
-                "    \"brandId\": 17,\n" +
-                "    \"barcodes\": [\n" +
-                "      \""+customNumber+"\"\n" +
-                "    ]\n" +
-                "}");
     }
 
     public void downloadLocally(byte[] file, String extention) {
