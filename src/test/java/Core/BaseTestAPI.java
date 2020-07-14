@@ -113,6 +113,14 @@ public class BaseTestAPI {
 
     }
 
+    public void waitForAction(long time){
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 

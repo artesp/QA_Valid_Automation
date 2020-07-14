@@ -33,6 +33,7 @@ public class ApiTests_FileTransferService_Target extends BaseTestAPI {
 
     @After
     public void clearClenup(){
+        waitForAction(3000);
         clearBase(idTarget);
     }
 

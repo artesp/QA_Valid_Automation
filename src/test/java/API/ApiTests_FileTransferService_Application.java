@@ -16,7 +16,7 @@ public class ApiTests_FileTransferService_Application extends BaseTestAPI {
     /*Existe apenas um GET para as requisições de Application*/
 
     @Test
-    public void get_FileTransferApplication_ListarAplicacoesConfiguradas(){
+    public void  get_FileTransferApplication_ListarAplicacoesConfiguradas(){
         given()
                 .when()
                 .get(path + "/application")
