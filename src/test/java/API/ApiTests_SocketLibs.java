@@ -42,6 +42,7 @@ public class ApiTests_SocketLibs{
                 .when()
                 .get("/supression")
                 .then()
+                .log().all()
                 .statusCode(200)
                 .body("emailAddress", is("CORUJACARDIA@HOTMAIL.COM"))
                 .body("statusId", is("Complaint"))
@@ -59,6 +60,7 @@ public class ApiTests_SocketLibs{
                 .when()
                 .post("/supression")
                 .then()
+                .log().all()
                 .statusCode(201)
         ;
 
@@ -87,6 +89,7 @@ public class ApiTests_SocketLibs{
                 .when()
                 .post("/supression")
                 .then()
+                .log().all()
                 .statusCode(201)
         ;
 
@@ -112,6 +115,7 @@ public class ApiTests_SocketLibs{
                 .when()
                 .post("/supression")
                 .then()
+                .log().all()
                 .statusCode(201)
         ;
 
@@ -122,6 +126,7 @@ public class ApiTests_SocketLibs{
                 .when()
                 .delete("/supression")
                 .then()
+                .log().all()
                 .statusCode(204)
         ;
 
