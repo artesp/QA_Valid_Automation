@@ -18,11 +18,13 @@ public class ApiTests_FileTransferService_Application extends BaseTestAPI {
     @Test
     public void  get_FileTransferApplication_ListarAplicacoesConfiguradas(){
         given()
+                .log().all()
                 .when()
                 .get(path + "/application")
                 .then()
                 .statusCode(200)
                 .body("$", hasSize(4))
+                .log().all()
                 .body("findAll{it}.type", hasItems("REPORT", "MAILING", "CAMPAIGN", "BUNDLE"))
         ;
     }
