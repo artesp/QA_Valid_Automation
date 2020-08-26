@@ -15,8 +15,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
@@ -82,7 +81,7 @@ public class ApiTests_CampaignService_PrintAnalytic extends BaseTestAPI {
                 .get(path + "print")
                 .then()
                 .statusCode(200)
-                .body("content.id", contains(idPrint))
+                .body("content.id", hasItem(idPrint))
         ;
     }
 

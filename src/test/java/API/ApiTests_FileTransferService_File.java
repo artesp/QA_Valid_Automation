@@ -1,7 +1,5 @@
 package API;
 
-import Assistant.AddressEntity;
-import Assistant.UrlSystemAssistant;
 import Core.BaseTestAPI;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;

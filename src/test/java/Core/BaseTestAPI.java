@@ -44,7 +44,7 @@ public class BaseTestAPI {
 
     @Before
     public void testInitialize(){
-        RestAssured.baseURI= UrlSystemAssistant.APITEST_URI_HOMOLOG;
+        RestAssured.baseURI= UrlSystemAssistant.APITEST_URI_DEV;
         //RestAssured.basePath = AddressEntity.getBasePath();
 
         reqBuilder = new RequestSpecBuilder();
